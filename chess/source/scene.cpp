@@ -231,7 +231,6 @@ bool Scene::DrawPieces()
 ///////////////////////////////////////////////////////////////////////////////
 void Scene::PutPiece(int x, int y, int piece)
 {
-			char str[255];
 			SDL_Rect source;
 			source.x = 0;
 			source.y = 0;

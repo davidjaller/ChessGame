@@ -9,7 +9,8 @@
 
 #pragma once
 
-#include <SDL.h>									
+#include <SDL.h>		
+#include <set>
 #include "sdl/SDL_gfxprimitives.h"	
 #include "source/board.h"
 
@@ -50,6 +51,9 @@ public:
 	
 	// CONSTRUCTOR
 	Scene(Board *pBoard);
+
+	//DESTRUCTOR
+	~Scene();
 
 	//METHODS
 	void DrawChessBoard();

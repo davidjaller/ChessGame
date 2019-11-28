@@ -23,6 +23,9 @@ Scene::Scene(Board *pBoard)
 	InitGraph ();
 }
 
+Scene::~Scene() {
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // UpdateScreen
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,6 +102,7 @@ int Scene::getBoardBoundry(int boundry)
 		case BOTTOM: return y2;
 		case TOP: return y1;
 		case LEFT: return x1;
+		default: return 0;
 	}
 }
 
@@ -159,21 +163,33 @@ bool Scene::DrawPieces()
 {
 	Square sq;
 	int piece, x, y;
-	for(int i = 0; i < 8; i++)
-	{
-		for(int j = 0; j < 8; j++)
-		{
-			sq.x = i;
-			sq.y = j;
-			piece = myBoard->getPieceOnSquare(sq);
-			x = x1 + SQUARE_SIZE*i;
-			y = y1 + SQUARE_SIZE*j;
-			PutPiece(x,y, piece);
-		}
+
+	set<int> white = myBoard->getWhiteAlivePieceSet();
+	for (set<int>::iterator it = white.begin(); it != white.end(); ++it) {
+
+		Board::IndexToSquare(*it, &sq);
+		piece = myBoard->getPieceOnSquare(sq);
+		x = x1 + SQUARE_SIZE * sq.x;
+		y = y1 + SQUARE_SIZE * sq.y;
+		PutPiece(x, y, piece);
+
 	}
-	for(int i = 0; i < myBoard->outedCountWhite; i++)
+
+	set<int> black = myBoard->getBlackAlivePieceSet();
+
+	for (set<int>::iterator it = black.begin(); it != black.end(); ++it) {
+
+		Board::IndexToSquare(*it, &sq);
+		piece = myBoard->getPieceOnSquare(sq);
+		x = x1 + SQUARE_SIZE * sq.x;
+		y = y1 + SQUARE_SIZE * sq.y;
+		PutPiece(x, y, piece);
+
+	}
+
+	int i = 0;
+	while (piece = myBoard->getPieceOnWhiteOutedSquare(i))
 	{
-		
 		if (i >= 8)
 		{
 			y = y2 + SQUARE_SIZE * 2;
@@ -184,11 +200,12 @@ bool Scene::DrawPieces()
 			x = x1 + SQUARE_SIZE * (i);
 			y = y2 + SQUARE_SIZE * 1;
 		}
-		piece = myBoard->getPieceOnWhiteOutedSquare(i);
+	
 		PutPiece(x,y, piece);
+		i++;
 	}
-
-	for(int i=0;i<myBoard->outedCountBlack;i++)
+	i = 0;
+	while(piece = myBoard->getPieceOnBlackOutedSquare(i))
 	{
 		
 		if (i >= 8)
@@ -201,8 +218,8 @@ bool Scene::DrawPieces()
 			x = x1 + SQUARE_SIZE * (i);
 			y = y1 - SQUARE_SIZE * 2;
 		}
-		piece = myBoard->getPieceOnBlackOutedSquare(i);
 		PutPiece(x,y, piece);
+		i++;
 	}
 	return true;
 }

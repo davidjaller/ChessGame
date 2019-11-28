@@ -23,6 +23,7 @@ class Game
 public:
 
 	Game (Scene *pScene, Board *pBoard);
+	~Game();
 	void GameStep();
 	void NewGame();
 	static Player getPlayer();

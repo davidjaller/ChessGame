@@ -10,6 +10,8 @@
 #endif
 #include "Game.h"
 
+extern int INIT_BOARD[8][8];
+
 ///////////////////////////////////////////////////////////////////////////////
 // Constructor
 //
@@ -27,14 +29,16 @@ Game::Game(Scene *pScene, Board *pBoard)
 	squareTo.y = 0;
 }
 
+Game::~Game() {}
+
 ///////////////////////////////////////////////////////////////////////////////
 // NewGame
 
 ///////////////////////////////////////////////////////////////////////////////
 void Game::NewGame()
 {
-	tempBoard.InitBoard();
-	myBoard->InitBoard();
+	tempBoard.InitBoard(INIT_BOARD);
+	myBoard->InitBoard(INIT_BOARD);
 	myScene->CreateScene();
 }
 

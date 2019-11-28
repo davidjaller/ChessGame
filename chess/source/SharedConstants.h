@@ -1,11 +1,18 @@
+
+///////////////////////////////////////////////////////////////////////////////
+// Shared Constants
+// Types and constants needed in more than one file
+///////////////////////////////////////////////////////////////////////////////
+
+
 #pragma once
-// ------ Defines -----
 #ifndef _shared_const_h_
 #define _shared_const_h_
+#include <list>
 typedef struct
 {
-	int x = -1;
-	int y = -1;
+	int x;
+	int y;
 }Square;
 
 typedef struct
@@ -43,5 +50,18 @@ enum casteling { WHITE_SHORT, WHITE_LONG, BLACK_SHORT, BLACK_LONG };
 
 enum class GameState { waitFirstInput, waitSecondInput, executeMove };
 enum class Player { WHITE = 0, BLACK = 1 };
+
+typedef struct
+{
+	int pieceType;
+	Square square;
+}Piece;
+
+typedef struct
+{
+	Square from;
+	Square to;
+
+}Move;
 
 #endif

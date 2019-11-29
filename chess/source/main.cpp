@@ -4,7 +4,7 @@ Program: Chess Game
 Author: David Jaller
 /*****************************************************************************************/
 
-#include "source/scene.h"
+#include "source/io/scene.h"
 #include "source/Game.h"
 #ifndef LINUX
 #include <windows.h>
@@ -38,7 +38,7 @@ int IsKeyDown (int pKey)
 int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 
-	Board board = Board(); 
+	Board board = Board(PlayerColor::WHITE); 
 	Scene scene = Scene(&board);
 	Game game = Game(&scene, &board);
 

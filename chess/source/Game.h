@@ -11,12 +11,14 @@
 #include <iostream>
 #include <time.h>
 
-#include "source/Board.h"
-#include "source/Scene.h"
+#include "source/board/Board.h"
 #include <source/RulesManager.h>
-#include "Source/SharedConstants.h"
+#include "source/SharedTypes.h"
+#include "source/io/humanPlayer.h"
+#include "source/Player.h"
+#include "source/io/Scene.h"
 
-static Player player; // TODO: prefearably this would be a private member of Game
+static PlayerColor player; // TODO: prefearably this would be a private member of Game
 
 class Game
 {
@@ -24,23 +26,15 @@ public:
 
 	Game (Scene *pScene, Board *pBoard);
 	~Game();
-	void GameStep();
+	void StepGame();
 	void NewGame();
-	static Player getPlayer();
 
 private:
 	Scene *myScene;
-	Board *myBoard;
-	GameState gameState;
-	
-
-	Square squareFrom;
-	Square squareTo;
-	
-	Board tempBoard;
-
-	bool positionWhitinBoard(int x, int y);
-	void coordinatesToSquare(int x, int y, Square* square);
+	Board *gameBoard;
+	int player;
+	HumanPlayer player1;
+	HumanPlayer player2;
 };
 
 #endif // _GAME_

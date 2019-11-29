@@ -12,7 +12,7 @@
 #include <SDL.h>		
 #include <set>
 #include "sdl/SDL_gfxprimitives.h"	
-#include "source/board.h"
+#include "source/board/Board.h"
 
 #pragma comment (lib, "../../SDL-1.2.15/lib/x86/SDL.lib")
 
@@ -68,7 +68,7 @@ public:
 private:
 
 	// VARIABLES
-	Board *myBoard;
+	Board *gameBoard;
 	SDL_Surface* bitmap;
 
 	//METHODS

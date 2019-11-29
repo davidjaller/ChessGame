@@ -6,7 +6,7 @@
 
 // ----- Includes -----
 
-#include "source/Board.h"
+#include "source/board/Board.h"
 #include "source/Game.h"
 #include "windows.h"
 #include <stdio.h>
@@ -25,15 +25,15 @@ int INIT_BOARD[8][8] = {
 						{ 4,  3,  2,  5,  6,  2,  3,  4}
 };
 
-Board::Board ()
+Board::Board (PlayerColor turn)
 {
-	InitBoard(INIT_BOARD);
+	InitBoard(INIT_BOARD, turn);
 }
 
 Board::~Board(){}
 
 // This is usefull for unit testing
-void Board::InitBoard(int initMatrix[8][8])
+void Board::InitBoard(int initMatrix[8][8], PlayerColor turn)
 {	
 	for(int y = 0; y<8;y++)
 	{
@@ -60,12 +60,13 @@ void Board::InitBoard(int initMatrix[8][8])
 	castelingPossible.blackShort = 1;
 	castelingPossible.whiteLong = 1;
 	castelingPossible.whiteShort = 1;
+	this->turn = turn;
 }
 
-Square Board::GetKingPos(Player pl)
+Square Board::GetKingPos(PlayerColor pl)
 {
 	
-	if (pl == Player::WHITE)
+	if (pl == PlayerColor::WHITE)
 		return whiteKing;
 	else
 		return blackKing;
@@ -73,7 +74,7 @@ Square Board::GetKingPos(Player pl)
 
 void Board::SetKingPos(Square sq)
 {
-	if (Game::getPlayer() == Player::WHITE)
+	if (turn == PlayerColor::WHITE)
 	{
 		whiteKing = sq;
 	}
@@ -93,7 +94,7 @@ bool Board::IsEmptySquare(Square sq)
 
 
 int Board::POV(int rankNumber) {
-	if (Game::getPlayer() == Player::BLACK)
+	if (turn == PlayerColor::BLACK)
 		return rankNumber;
 	else
 		return 7 - rankNumber;
@@ -101,8 +102,8 @@ int Board::POV(int rankNumber) {
 
 bool Board::IsFriendlyPiece(int piece)
 {
-	if ((Game::getPlayer() == Player::WHITE && piece > 0)
-		|| (Game::getPlayer() == Player::BLACK && piece < 0))
+	if ((turn == PlayerColor::WHITE && piece > 0)
+		|| (turn == PlayerColor::BLACK && piece < 0))
 		return true;
 	else
 		return false;
@@ -138,9 +139,9 @@ set<int> Board::getBlackAlivePieceSet() {
 // Overloaded method for accesing alive pieces of sertain colour 
 // without needing to check every square
 // If needing all pieces better to use getBlackAlivePieceSet() and iterate trough
-int Board::getPieceOnSquare(Player player, int i) {
+int Board::getPieceOnSquare(PlayerColor player, int i) {
 	int index = 0;
-	if (player == Player::WHITE) {
+	if (player == PlayerColor::WHITE) {
 		if (i < blackAlivePieceIdxs.size())
 			// this is a litle slow  
 			index = *std::next(blackAlivePieceIdxs.begin(), i);
@@ -178,10 +179,10 @@ void Board::SetPieceOnSquare(int piece, int sqY, int sqX)
 	board[sqY][sqX] = piece;
 }
 
-int Board::getPieceOnWhiteOutedSquare(int square)
+int Board::getPieceOnWhiteOutedSquare(int squareNr)
 {
-	if (square < outedWhite.size())
-		return outedWhite[square];
+	if (squareNr < outedWhite.size())
+		return outedWhite[squareNr];
 	else
 		return 0;
 }
@@ -244,7 +245,6 @@ void Board::PromoteQueen(Square square) {
 
 void Board::makeMoveFromTo(Square from, Square to)
 {
-	Player player = Game::getPlayer();
 	int fromPiece = getPieceOnSquare(from);
 	int toPiece = getPieceOnSquare(to);
 
@@ -271,24 +271,24 @@ void Board::makeMoveFromTo(Square from, Square to)
 			if (to.x == 2) { // long
 				rookFrom.x = 0;
 				rookTo.x = 3;
-				SetPieceOnSquare(ROOK * (1 - 2 * (int)player), from.y, 3);
+				SetPieceOnSquare(ROOK * (1 - 2 * (int)turn), from.y, 3);
 				SetPieceOnSquare(0, from.y, 0);
 			}
 			else if (to.x == 6) { // short
 				rookFrom.x = 7;
 				rookTo.x = 5;
-				SetPieceOnSquare(ROOK * (1 - 2 * (int)player), from.y, 5);
+				SetPieceOnSquare(ROOK * (1 - 2 * (int)turn), from.y, 5);
 				SetPieceOnSquare(0, from.y, 7);
 			}
 		}
 		
 		// if king move then casteling not possible in future
-		if(player == Player::WHITE)
+		if(turn == PlayerColor::WHITE)
 		{
 			castelingPossible.whiteLong = false;
 			castelingPossible.whiteShort = false;
 		}
-		else if(player == Player::BLACK)
+		else if(turn == PlayerColor::BLACK)
 		{
 			castelingPossible.blackLong = false;
 			castelingPossible.blackShort = false;

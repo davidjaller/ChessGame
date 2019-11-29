@@ -1,9 +1,8 @@
 #pragma once
 #ifndef _rulesManager_h
 #define _rulesManager_h
-#include "source/board.h"
 #include "source/game.h"
-#include "source/Board.h"
+#include "source/board/Board.h"
 class RulesManager
 {
 	public:

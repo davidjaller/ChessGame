@@ -6,7 +6,7 @@
 
 // -- Includes ---
 
-#include "source/scene.h"
+#include "source/io/scene.h"
 #include "windows.h"
 #include <stdio.h>
 
@@ -19,7 +19,7 @@
 
 Scene::Scene(Board *pBoard)
 {
-	myBoard = pBoard;
+	gameBoard = pBoard;
 	InitGraph ();
 }
 
@@ -164,23 +164,23 @@ bool Scene::DrawPieces()
 	Square sq;
 	int piece, x, y;
 
-	set<int> white = myBoard->getWhiteAlivePieceSet();
+	set<int> white = gameBoard->getWhiteAlivePieceSet();
 	for (set<int>::iterator it = white.begin(); it != white.end(); ++it) {
 
 		Board::IndexToSquare(*it, &sq);
-		piece = myBoard->getPieceOnSquare(sq);
+		piece = gameBoard->getPieceOnSquare(sq);
 		x = x1 + SQUARE_SIZE * sq.x;
 		y = y1 + SQUARE_SIZE * sq.y;
 		PutPiece(x, y, piece);
 
 	}
 
-	set<int> black = myBoard->getBlackAlivePieceSet();
+	set<int> black = gameBoard->getBlackAlivePieceSet();
 
 	for (set<int>::iterator it = black.begin(); it != black.end(); ++it) {
 
 		Board::IndexToSquare(*it, &sq);
-		piece = myBoard->getPieceOnSquare(sq);
+		piece = gameBoard->getPieceOnSquare(sq);
 		x = x1 + SQUARE_SIZE * sq.x;
 		y = y1 + SQUARE_SIZE * sq.y;
 		PutPiece(x, y, piece);
@@ -188,7 +188,7 @@ bool Scene::DrawPieces()
 	}
 
 	int i = 0;
-	while (piece = myBoard->getPieceOnWhiteOutedSquare(i))
+	while (piece = gameBoard->getPieceOnWhiteOutedSquare(i))
 	{
 		if (i >= 8)
 		{
@@ -205,7 +205,7 @@ bool Scene::DrawPieces()
 		i++;
 	}
 	i = 0;
-	while(piece = myBoard->getPieceOnBlackOutedSquare(i))
+	while(piece = gameBoard->getPieceOnBlackOutedSquare(i))
 	{
 		
 		if (i >= 8)

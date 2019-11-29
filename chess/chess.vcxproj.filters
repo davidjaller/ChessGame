@@ -24,19 +24,37 @@
     <ClCompile Include="sdl\SDL_rotozoom.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Board.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene.cpp">
+    <ClCompile Include="source\RulesManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\RulesManager.cpp">
+    <ClCompile Include="source\engine\computerPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine\moveGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine\moveManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\io\humanPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\io\scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\board\Board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\board\BoardRepresentation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,19 +71,37 @@
     <ClInclude Include="sdl\SDL_rotozoom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\RulesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\SharedConstants.h">
+    <ClInclude Include="source\board\Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\board\BoardRepresentation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\io\humanPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\io\scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\computerPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\moveGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\moveManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SharedTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

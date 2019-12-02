@@ -5,7 +5,7 @@ using namespace std;
 RulesManager::RulesManager() {
 }
 
-bool RulesManager::IsLegalMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalMove(const Board* board, Square from, Square to)
 {
 	int piece = abs(board->getPieceOnSquare(from));
 	switch (piece)
@@ -38,7 +38,7 @@ bool RulesManager::IsLegalMove(Board* board, Square from, Square to)
 	return true;
 }
 
-bool RulesManager::IsLegalPawnMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalPawnMove(const Board* board, Square from, Square to)
 {
 	if (board->IsEmptySquare(to))
 	{
@@ -66,7 +66,7 @@ bool RulesManager::IsLegalPawnMove(Board* board, Square from, Square to)
 	return false;
 }
 
-bool RulesManager::IsLegalBishopMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalBishopMove(const Board* board, Square from, Square to)
 {
 	if (abs(to.x - from.x) == abs(to.y - from.y))
 	{
@@ -97,7 +97,7 @@ bool RulesManager::IsLegalBishopMove(Board* board, Square from, Square to)
 	return false;
 }
 
-bool RulesManager::IsLegalRookMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalRookMove(const Board* board, Square from, Square to)
 {
 	Square sq;
 	if (from.x == to.x || from.y == to.y)
@@ -129,7 +129,7 @@ bool RulesManager::IsLegalRookMove(Board* board, Square from, Square to)
 		return false;
 }
 
-bool RulesManager::IsLegalKingMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalKingMove(const Board* board, Square from, Square to)
 {
 	if (from.x == 4 && board->POV(from.y) == 0 && board->POV(to.y) == 0 && (to.x == 2 || to.x == 6))
 	{
@@ -144,7 +144,7 @@ bool RulesManager::IsLegalKingMove(Board* board, Square from, Square to)
 		return false;
 }
 
-bool RulesManager::IsLegalCasteling(Board* board, Square to)
+bool RulesManager::IsLegalCasteling(const Board* board, Square to)
 {
 	Square sq = to;
 	if (to.y == 0 && to.x == 2)
@@ -219,14 +219,14 @@ bool RulesManager::IsLegalCasteling(Board* board, Square to)
 
 }
 
-bool RulesManager::IsLegalQueenMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalQueenMove(const Board* board, Square from, Square to)
 {
 	if (IsLegalRookMove(board, from, to) || IsLegalBishopMove(board, from, to))
 		return true;
 	else return false;
 }
 
-bool RulesManager::IsLegalKnightMove(Board* board, Square from, Square to)
+bool RulesManager::IsLegalKnightMove(const Board* board, Square from, Square to)
 {
 
 	int distX = abs(to.x - from.x);
@@ -237,12 +237,12 @@ bool RulesManager::IsLegalKnightMove(Board* board, Square from, Square to)
 		return false;
 }
 
-bool RulesManager::KingIsChecked(Board* board, Square* attackingSquare)
+bool RulesManager::KingIsChecked(const Board* board, Square* attackingSquare)
 {
 	return PieceIsUnderThreat(board, board->GetKingPos(board->getTurn()), attackingSquare);
 }
 
-bool RulesManager::PieceIsUnderThreat(Board* board, Square pieceSquare, Square* attackingSqaure)
+bool RulesManager::PieceIsUnderThreat(const Board* board, Square pieceSquare, Square* attackingSqaure)
 {
 	// this can be optimized, by checking diagonal looking for enemy bishop, pawn or queen
 	// and sideways looking for caste or queen, and knigh-wise looking for knight,
@@ -268,7 +268,7 @@ bool RulesManager::PieceIsUnderThreat(Board* board, Square pieceSquare, Square* 
 }
 
 // Overloaded method without output pointer
-bool RulesManager::PieceIsUnderThreat(Board* board, Square pieceSquare) {
+bool RulesManager::PieceIsUnderThreat(const Board* board, Square pieceSquare) {
 
 	Square sq;
 	

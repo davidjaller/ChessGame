@@ -6,17 +6,17 @@ class RulesManager
 {
 	public:
 		RulesManager();
-		static bool IsLegalPawnMove(Board* board, Square from, Square to);
-		static bool IsLegalBishopMove(Board* board, Square from, Square to);
-		static bool IsLegalRookMove(Board* board, Square from, Square to);
-		static bool IsLegalKingMove(Board* board, Square from, Square to);
-		static bool IsLegalQueenMove(Board* board, Square from, Square to);
-		static bool IsLegalKnightMove(Board* board, Square from, Square to);
-		static bool IsLegalCasteling(Board* board, Square to);
-		static bool PieceIsUnderThreat(Board* board, Square pieceSquare, Square* attackingSquare);
-		static bool PieceIsUnderThreat(Board* board, Square pieceSquare);
-		static bool KingIsChecked(Board* board, Square* attackingSquare);
-		static bool IsLegalMove(Board* board, Square from, Square to);
+		static bool IsLegalPawnMove(const Board* board, Square from, Square to);
+		static bool IsLegalBishopMove(const Board* board, Square from, Square to);
+		static bool IsLegalRookMove(const Board* board, Square from, Square to);
+		static bool IsLegalKingMove(const Board* board, Square from, Square to);
+		static bool IsLegalQueenMove(const Board* board, Square from, Square to);
+		static bool IsLegalKnightMove(const Board* board, Square from, Square to);
+		static bool IsLegalCasteling(const Board* board, Square to);
+		static bool PieceIsUnderThreat(const Board* board, Square pieceSquare, Square* attackingSquare);
+		static bool PieceIsUnderThreat(const Board* board, Square pieceSquare);
+		static bool KingIsChecked(const Board* board, Square* attackingSquare);
+		static bool IsLegalMove(const Board* board, Square from, Square to);
 
 };
 

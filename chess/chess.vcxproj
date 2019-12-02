@@ -80,7 +80,7 @@
     <ClCompile Include="sdl\SDL_gfxPrimitives.c" />
     <ClCompile Include="sdl\SDL_rotozoom.c" />
     <ClCompile Include="source\board\Board.cpp" />
-    <ClCompile Include="source\board\BoardRepresentation.cpp" />
+    <ClCompile Include="source\board\FundamentalBoard.cpp" />
     <ClCompile Include="source\engine\computerPlayer.cpp" />
     <ClCompile Include="source\engine\moveGenerator.cpp" />
     <ClCompile Include="source\engine\moveManager.cpp" />
@@ -97,7 +97,7 @@
     <ClInclude Include="sdl\SDL_gfxPrimitives_font.h" />
     <ClInclude Include="sdl\SDL_rotozoom.h" />
     <ClInclude Include="source\board\Board.h" />
-    <ClInclude Include="source\board\BoardRepresentation.h" />
+    <ClInclude Include="source\board\FundamentalBoard.h" />
     <ClInclude Include="source\engine\computerPlayer.h" />
     <ClInclude Include="source\engine\moveGenerator.h" />
     <ClInclude Include="source\engine\moveManager.h" />

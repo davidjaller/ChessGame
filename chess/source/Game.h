@@ -5,6 +5,7 @@
 
 #ifndef _GAME_
 #define _GAME_
+#pragma once
 
 // ------ Includes -----
 #include <fstream>
@@ -18,7 +19,8 @@
 #include "source/Player.h"
 #include "source/io/Scene.h"
 
-static PlayerColor player; // TODO: prefearably this would be a private member of Game
+
+//class HumanPlayer;
 
 class Game
 {

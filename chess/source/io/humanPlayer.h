@@ -1,9 +1,11 @@
+
 #ifndef _human_player_h
 #define _human_player_h
+#pragma once
+
 #include "source/Player.h"
 #include "source/board/Board.h"
 #include "source/SharedTypes.h"
-#include "source/board/Board.h"
 #include <source/RulesManager.h>
 #include "source/io/Scene.h"
 #include <time.h>
@@ -11,16 +13,15 @@
 
 class HumanPlayer : public Player {
 public:
-	HumanPlayer();
 	HumanPlayer(PlayerColor color, Board *pBoard, Scene *pScene);
 	void init();
 	bool stepTurn();
-	bool canMove();
-	bool isChecked();
+	//bool canMove();
+	//bool isChecked();
 private:
 
-	Board* gameBoard; // pointer to global board
-	Board tempBoard = Board(PlayerColor::WHITE); // humanPlayers own  
+	Board* gameBoard; // pointer to actual board
+	Board tempBoard;// = Board(PlayerColor::WHITE); // humanPlayers own  
 	Scene* myScene;
 	HumanPlayerState state;
 

@@ -38,9 +38,9 @@ int IsKeyDown (int pKey)
 int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 
-	Board board = Board(PlayerColor::WHITE); 
-	Scene scene = Scene(&board);
-	Game game = Game(&scene, &board);
+	Board board = Board(); 
+	Scene scene(&board);
+	Game game(&scene, &board);
 
 	scene.CreateScene();
 	scene.UpdateScreen();
@@ -49,7 +49,7 @@ int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	
 	while(!IsKeyDown (SDLK_ESCAPE))
 	{
-		game.GameStep();
+		game.StepGame();
 		scene.UpdateScreen();
 		if(IsKeyDown(SDLK_F1))
 		{

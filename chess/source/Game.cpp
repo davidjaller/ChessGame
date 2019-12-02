@@ -10,19 +10,17 @@
 #endif
 #include "Game.h"
 
-extern int INIT_BOARD[8][8];
+extern array<array<int, 8>, 8> INIT_BOARD;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Constructor
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-Game::Game(Scene *pScene, Board *pBoard)
+Game::Game(Scene *pScene, Board *pBoard): player1(PlayerColor::WHITE, pBoard, pScene), player2(PlayerColor::BLACK, pBoard, pScene)
 {
 	gameBoard = pBoard;
 	myScene = pScene;
-	player1 = HumanPlayer(PlayerColor::WHITE, pBoard, pScene);
-	player2 = HumanPlayer(PlayerColor::BLACK, pBoard, pScene);
 	player = 1;
 }
 

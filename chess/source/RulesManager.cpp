@@ -46,8 +46,8 @@ bool RulesManager::IsLegalPawnMove(Board* board, Square from, Square to)
 		{
 			int a = abs(from.y - to.y);
 			int b = (board->POV(from.y));
-			if (abs(from.y - to.y) == 1 
-				|| ((board->POV(from.y) == 1 && abs(from.y - to.y) == 2)))
+			if (board->POV(to.y) - board->POV(from.y) == 1 
+				|| (board->POV(from.y) == 1 && board->POV(to.y) - board->POV(from.y) == 2))
 			{
 				return true;
 			}
@@ -239,7 +239,7 @@ bool RulesManager::IsLegalKnightMove(Board* board, Square from, Square to)
 
 bool RulesManager::KingIsChecked(Board* board, Square* attackingSquare)
 {
-	return PieceIsUnderThreat(board, board->GetKingPos(Game::getPlayer()), attackingSquare);
+	return PieceIsUnderThreat(board, board->GetKingPos(board->getTurn()), attackingSquare);
 }
 
 bool RulesManager::PieceIsUnderThreat(Board* board, Square pieceSquare, Square* attackingSqaure)

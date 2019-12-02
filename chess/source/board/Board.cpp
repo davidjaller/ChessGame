@@ -14,7 +14,7 @@
 #include <string>
 using namespace std;
 
-int INIT_BOARD[8][8] = {
+array<array<int, 8>, 8> INIT_BOARD = { {
 						{-4, -3, -2, -5, -6, -2, -3, -4},
 						{-1, -1, -1, -1, -1, -1, -1, -1},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
@@ -23,17 +23,19 @@ int INIT_BOARD[8][8] = {
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 1,  1,  1,  1,  0,  1,  1,  1},
 						{ 4,  3,  2,  5,  6,  2,  3,  4}
-};
+} };
 
-Board::Board (PlayerColor turn)
+
+
+Board::Board ()
 {
-	InitBoard(INIT_BOARD, turn);
+	InitBoard(INIT_BOARD);
 }
 
 Board::~Board(){}
 
 // This is usefull for unit testing
-void Board::InitBoard(int initMatrix[8][8], PlayerColor turn)
+void Board::InitBoard(array<array<int, 8>, 8> initMatrix, PlayerColor turn)
 {	
 	for(int y = 0; y<8;y++)
 	{
@@ -70,6 +72,13 @@ Square Board::GetKingPos(PlayerColor pl)
 		return whiteKing;
 	else
 		return blackKing;
+}
+
+PlayerColor Board::getTurn() {
+	return turn;
+}
+void Board::setTurn(PlayerColor turn) {
+	this->turn = turn;
 }
 
 void Board::SetKingPos(Square sq)
@@ -200,6 +209,7 @@ void Board::MovePiece(Square from, Square to){
 	int fromPiece = getPieceOnSquare(from);
 	SetPieceOnSquare(fromPiece, to);
 	SetPieceOnSquare(0, from);
+
 	if (fromPiece > 0){ // white
 		whiteAlivePieceIdxs.erase(SquareToIndex(from));
 		whiteAlivePieceIdxs.insert(SquareToIndex(to));
@@ -262,7 +272,7 @@ void Board::makeMoveFromTo(Square from, Square to)
 		castelingPossible.blackLong = false;
 
 	// king move
-	else if (abs(getPieceOnSquare(from)) == KING)
+	else if (abs(fromPiece) == KING)
 	{
 		// Check if a casteling move and move the rook
 		if (from.x == 4 && POV(from.y) == 0 && POV(to.y) == 0 && (to.x == 2 || to.x == 6)) {

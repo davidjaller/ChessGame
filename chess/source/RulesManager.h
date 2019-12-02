@@ -1,7 +1,6 @@
 #pragma once
 #ifndef _rulesManager_h
 #define _rulesManager_h
-#include "source/game.h"
 #include "source/board/Board.h"
 class RulesManager
 {

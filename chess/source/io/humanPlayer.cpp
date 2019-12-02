@@ -1,8 +1,9 @@
 #include "source/io/humanPlayer.h"
 
-HumanPlayer::HumanPlayer() {};
+//HumanPlayer::HumanPlayer() {};
 
-HumanPlayer::HumanPlayer(PlayerColor color, Board *pBoard, Scene* pScene) {
+HumanPlayer::HumanPlayer(PlayerColor color, Board *pBoard, Scene* pScene) : tempBoard()
+ {
 	SetColor(color);
 
 	squareFrom.x = 0;
@@ -84,6 +85,7 @@ bool HumanPlayer::stepTurn()
 		{
 			Square attackingSquare;
 			// Make move on temporary  board and se if king becomes or remaines threatened
+			tempBoard = *gameBoard;
 			tempBoard.makeMoveFromTo(squareFrom, squareTo);
 			if (!RulesManager::KingIsChecked(&tempBoard, &attackingSquare))
 			{

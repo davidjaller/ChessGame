@@ -11,6 +11,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include <array>
 #include <set>
 #include "source/SharedTypes.h"
 
@@ -20,7 +21,7 @@ class Board
 {
 public:
 
-	Board						(PlayerColor turn);
+	Board						();
 	~Board();
 
 	int getPieceOnSquare		(Square sq);
@@ -31,7 +32,7 @@ public:
 	bool IsEmptySquare			(Square sq);
 	void makeMoveFromTo			(Square from, Square to);
 	void PrintInt				(int var, std::string varName);
-	void InitBoard				(int initMatrix[8][8], PlayerColor turn);
+	void InitBoard				(array<array<int, 8>, 8> initMatrix, PlayerColor turn = PlayerColor::WHITE);
 	int getPieceOnWhiteOutedSquare(int square);
 	int getPieceOnBlackOutedSquare(int square);
 
@@ -56,7 +57,8 @@ private:
 	vector<int> outedWhite;
 	vector<int> outedBlack;
 
-	int board[8][8];  // matrix representation of pieces on the board
+	array<array<int, 8>, 8> board;  // matrix representation of pieces on the board
+
 	PlayerColor turn;
 
 	set<int> whiteAlivePieceIdxs; // second representation of pieces,

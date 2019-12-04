@@ -120,8 +120,8 @@ void Scene::MarkSquare(Square square)
 
         SDL_Rect rect = { SQUARE_SIZE , SQUARE_SIZE } ;
 
-        rect.x = x1 + square.x * SQUARE_SIZE ;
-        rect.y = y1 + square.y *SQUARE_SIZE ;
+        rect.x = x1 + square.file * SQUARE_SIZE ;
+        rect.y = y1 + square.rank *SQUARE_SIZE ;
         ( void )SDL_FillRect( s , NULL , 0x440000FF ) ;
         ( void )SDL_BlitSurface( s , NULL , mScreen , &rect ) ;
 		SDL_FreeSurface( s ) ;
@@ -161,7 +161,7 @@ return surface ;
 ///////////////////////////////////////////////////////////////////////////////
 bool Scene::DrawPieces()
 {
-	int piece, x, y;
+	int piece, file, rank;
 	vector<PlayerColor> white_black = { PlayerColor::WHITE, PlayerColor::BLACK};
 	for (int i = 0; i < 2; i++) {
 		Square sq;
@@ -171,9 +171,9 @@ bool Scene::DrawPieces()
 
 			Board::IndexToSquare(*it, &sq);
 			piece = gameBoard->getPieceOnSquare(sq);
-			x = x1 + SQUARE_SIZE * sq.x;
-			y = y1 + SQUARE_SIZE * sq.y;
-			PutPiece(x, y, piece);
+			file = x1 + SQUARE_SIZE * sq.file;
+			rank = y1 + SQUARE_SIZE * sq.rank;
+			PutPiece(file, rank, piece);
 
 		}
 	}
@@ -183,16 +183,16 @@ bool Scene::DrawPieces()
 	{
 		if (i >= 8)
 		{
-			y = y2 + SQUARE_SIZE * 2;
-			x = x1 + SQUARE_SIZE * (i-7);
+			rank = y2 + SQUARE_SIZE * 2;
+			file = x1 + SQUARE_SIZE * (i-7);
 		}
 		else
 		{
-			x = x1 + SQUARE_SIZE * (i);
-			y = y2 + SQUARE_SIZE * 1;
+			file = x1 + SQUARE_SIZE * (i);
+			rank = y2 + SQUARE_SIZE * 1;
 		}
 	
-		PutPiece(x,y, piece);
+		PutPiece(file,rank, piece);
 		i++;
 	}
 	i = 0;
@@ -201,15 +201,15 @@ bool Scene::DrawPieces()
 		
 		if (i >= 8)
 		{
-			y = y1 - SQUARE_SIZE * 1;
-			x = x1 + SQUARE_SIZE * (i-7);
+			rank = y1 - SQUARE_SIZE * 1;
+			file = x1 + SQUARE_SIZE * (i-7);
 		}
 		else
 		{
-			x = x1 + SQUARE_SIZE * (i);
-			y = y1 - SQUARE_SIZE * 2;
+			file = x1 + SQUARE_SIZE * (i);
+			rank = y1 - SQUARE_SIZE * 2;
 		}
-		PutPiece(x,y, piece);
+		PutPiece(file,rank, piece);
 		i++;
 	}
 	return true;
@@ -220,7 +220,7 @@ bool Scene::DrawPieces()
 //
 // Adds image of piece
 ///////////////////////////////////////////////////////////////////////////////
-void Scene::PutPiece(int x, int y, int piece)
+void Scene::PutPiece(int file, int rank, int piece)
 {
 			SDL_Rect source;
 			source.x = 0;
@@ -229,53 +229,46 @@ void Scene::PutPiece(int x, int y, int piece)
 			source.h = 100;
 
 			SDL_Rect destination;
-			destination.x = x;
-			destination.y = y;
+			destination.x = file;
+			destination.y = rank;
 			destination.w = SQUARE_SIZE;
 			destination.h = SQUARE_SIZE;
-
-			// pawn images slightly uncentered, offset a bit to left
-			if (piece == 1)
-				destination.x -= 5;
-			else if (piece == -1)
-				destination.x -= 3;
 		
-			
 			SDL_Surface* bitmap;
 			if(piece!=0)
 			{
 				switch (piece)
 				{
-				case -1:  bitmap = SDL_LoadBMP("../../pieces/bP.bmp");	
+				case -1:  bitmap = SDL_LoadBMP("pieces/bP.bmp");	
 					break;
-				case -4:  bitmap = SDL_LoadBMP("../../pieces/bR.bmp");
+				case -4:  bitmap = SDL_LoadBMP("pieces/bR.bmp");
 					break;
-				case -3:  bitmap = SDL_LoadBMP("../../pieces/bKn.bmp");
+				case -3:  bitmap = SDL_LoadBMP("pieces/bKn.bmp");
 					break;
-				case -2:  bitmap = SDL_LoadBMP("../../pieces/bB.bmp");
+				case -2:  bitmap = SDL_LoadBMP("pieces/bB.bmp");
 					break;
-				case -5:  bitmap = SDL_LoadBMP("../../pieces/bQ.bmp");
+				case -5:  bitmap = SDL_LoadBMP("pieces/bQ.bmp");
 					break;
-				case -6:  bitmap = SDL_LoadBMP("../../pieces/bK.bmp");
+				case -6:  bitmap = SDL_LoadBMP("pieces/bK.bmp");
 					break;
-				case 1: bitmap = SDL_LoadBMP("../../pieces/wP.bmp");
+				case 1: bitmap = SDL_LoadBMP("pieces/wP.bmp");
 					break;
-				case 4:  bitmap = SDL_LoadBMP("../../pieces/wR.bmp");
+				case 4:  bitmap = SDL_LoadBMP("pieces/wR.bmp");
 					break;
-				case 3:  bitmap = SDL_LoadBMP("../../pieces/wKn.bmp");
+				case 3:  bitmap = SDL_LoadBMP("pieces/wKn.bmp");
 					break;
-				case 2:  bitmap = SDL_LoadBMP("../../pieces/wB.bmp");
+				case 2:  bitmap = SDL_LoadBMP("pieces/wB.bmp");
 					break;
-				case 5:  bitmap = SDL_LoadBMP("../../pieces/wQ.bmp");
+				case 5:  bitmap = SDL_LoadBMP("pieces/wQ.bmp");
 					break;
-				case 6:  bitmap = SDL_LoadBMP("../../pieces/wK.bmp");
+				case 6:  bitmap = SDL_LoadBMP("pieces/wK.bmp");
 					break;
-				default:  bitmap = SDL_LoadBMP("../../pieces/wK.bmp");
+				default:  bitmap = SDL_LoadBMP("pieces/wK.bmp");
 					break;
 				}
 
 				// Make white color of image transparant
-				SDL_SetColorKey( bitmap, SDL_SRCCOLORKEY, SDL_MapRGB(bitmap->format, 255, 255, 255) );
+				SDL_SetColorKey( bitmap, SDL_SRCCOLORKEY, SDL_MapRGB(bitmap->format, 255, 0, 0) );
 
 				SDL_BlitSurface(bitmap,&source,mScreen,&destination);
 				SDL_FreeSurface(bitmap);

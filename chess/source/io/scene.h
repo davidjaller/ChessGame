@@ -75,7 +75,7 @@ private:
 	int InitGraph();
 	void DrawRectangle (int pX1, int pY1, int pX2, int pY2, enum color pC);
 	SDL_Surface* CreateSurface(int width , int height);
-	void PutPiece(int x, int y, int piece);
+	void PutPiece(int file, int rank, int piece);
 
 };
 

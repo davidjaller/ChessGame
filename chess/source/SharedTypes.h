@@ -11,8 +11,8 @@
 #include <list>
 typedef struct
 {
-	int x;
-	int y;
+	int file;
+	int rank;
 }Square;
 
 typedef struct
@@ -61,6 +61,8 @@ typedef struct
 {
 	Square from;
 	Square to;
+	int piece;
+	bool kill;
 
 }Move;
 

@@ -26,8 +26,8 @@ private:
 	Square squareFrom;
 	Square squareTo;
 
-	bool positionWhitinBoard(int x, int y);
-	void coordinatesToSquare(int x, int y, Square* square);
+	bool positionWhitinBoard(int file, int rank);
+	void coordinatesToSquare(int file, int rank, Square* square);
 	bool turnDone;
 };
 #endif

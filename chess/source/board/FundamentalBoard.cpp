@@ -37,23 +37,23 @@ FundamentalBoard::~FundamentalBoard() {}
 // This is usefull for unit testing
 void FundamentalBoard::InitBoard(array<array<int, 8>, 8> initMatrix, PlayerColor turn)
 {
-	for (int y = 0; y < 8; y++)
+	for (int rank = 0; rank < 8; rank++)
 	{
-		for (int x = 0; x < 8; x++)
+		for (int file = 0; file < 8; file++)
 		{
-			board[y][x] = initMatrix[y][x];
-			if (board[y][x] > 0) {
-				whiteAlivePieceIdxs.insert(SquareToIndex(y, x));
-				if (board[y][x] == WHITE_KING) {
-					whiteKing.x = x;
-					whiteKing.y = y;
+			board[rank][file] = initMatrix[rank][file];
+			if (board[rank][file] > 0) {
+				whiteAlivePieceIdxs.insert(SquareToIndex(rank, file));
+				if (board[rank][file] == WHITE_KING) {
+					whiteKing.file = file;
+					whiteKing.rank = rank;
 				}
 			}
-			else if (board[y][x] < 0) {
-				blackAlivePieceIdxs.insert(SquareToIndex(y, x));
-				if (board[y][x] == BLACK_KING) {
-					blackKing.x = x;
-					blackKing.y = y;
+			else if (board[rank][file] < 0) {
+				blackAlivePieceIdxs.insert(SquareToIndex(rank, file));
+				if (board[rank][file] == BLACK_KING) {
+					blackKing.file = file;
+					blackKing.rank = rank;
 				}
 			}
 		}
@@ -103,11 +103,11 @@ int FundamentalBoard::POV(int rankNumber) const {
 
 int FundamentalBoard::getPieceOnSquare(Square sq) const
 {
-	if (sq.x > 7 || sq.y > 7 || sq.x < 0 || sq.y < 0) {
+	if (sq.file > 7 || sq.rank > 7 || sq.file < 0 || sq.rank < 0) {
 		(void)fprintf(stderr, "iligal square : \n");
 		return 0;
 	}
-	return board[sq.y][sq.x];
+	return board[sq.rank][sq.file];
 }
 
 int FundamentalBoard::getPieceOnSquare(int sqY, int sqX) const {
@@ -131,6 +131,12 @@ set<int> FundamentalBoard::getAlivePieceSet(PlayerColor color) const {
 	else
 		cout << "getAlivePieceSet: Invalid argument" << endl;
 }
+PlayerColor FundamentalBoard::getOpposite(PlayerColor color) {
+	if (color == PlayerColor::WHITE)
+		return PlayerColor::BLACK;
+	if (color == PlayerColor::BLACK)
+		return PlayerColor::WHITE;
+}
 
 // Overloaded method for accesing alive pieces of sertain colour 
 // without needing to check every square
@@ -150,24 +156,28 @@ int FundamentalBoard::getPieceOnSquare(PlayerColor player, int i) const {
 
 void FundamentalBoard::IndexToSquare(int index, Square* square) {
 	// 64 squares, index row by row from top left
-	// index 0 is x=0, y=0, index 7 is x7, y=0, index 63 is x=7, y=7
-	square->x = index % 8;
-	square->y = index / 8;
+	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
+	square->file = index % 8;
+	square->rank = index / 8;
 }
 
 int FundamentalBoard::SquareToIndex(Square square) {
-	return SquareToIndex(square.y, square.x);
+	return SquareToIndex(square.rank, square.file);
 }
 
 int FundamentalBoard::SquareToIndex(int sqY, int sqX) {
 	// 64 squares, index row by row from top left
-	// index 0 is x=0, y=0, index 7 is x7, y=0, index 63 is x=7, y=7
+	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
 	return sqY * 8 + sqX;
 }
 
 void FundamentalBoard::SetPieceOnSquare(int piece, Square sq)
 {
-	board[sq.y][sq.x] = piece;
+	if (sq.rank >= 0 && sq.rank < 8 && sq.file >= 0 && sq.file < 8) {
+		board[sq.rank][sq.file] = piece;
+	}
+	else
+		cout << "SetPieceOnSquare(): Out of bounds" << endl;
 }
 
 void FundamentalBoard::SetPieceOnSquare(int piece, int sqY, int sqX)

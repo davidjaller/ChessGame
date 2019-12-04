@@ -6,10 +6,10 @@ HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard) : Play
  {
 	SetColor(color);
 
-	squareFrom.x = 0;
-	squareFrom.y = 0;
-	squareTo.x = 0;
-	squareTo.y = 0;
+	squareFrom.file = 0;
+	squareFrom.rank = 0;
+	squareTo.file = 0;
+	squareTo.rank = 0;
 	myScene = pScene;
 
 	init();
@@ -86,7 +86,7 @@ bool HumanPlayer::stepTurn()
 			// Make move on temporary  board and se if king becomes or remaines threatened
 			tempBoard = *gameBoard;
 			tempBoard.makeMoveFromTo(squareFrom, squareTo);
-			if (!RulesManager::KingIsChecked(&tempBoard, &attackingSquares))
+			if (!RulesManager::KingIsChecked(&tempBoard, &attackingSquares, color))
 			{
 				*gameBoard = tempBoard;
 
@@ -131,9 +131,9 @@ bool HumanPlayer::stepTurn()
 // positionWithinBoard
 //
 ///////////////////////////////////////////////////////////////////////////////
-bool HumanPlayer::positionWhitinBoard(int x, int y)
+bool HumanPlayer::positionWhitinBoard(int file, int rank)
 {
-	if (x > myScene->x1&& x < myScene->x2 && y > myScene->y1&& y < myScene->y2)
+	if (file > myScene->x1&& file < myScene->x2 && rank > myScene->y1&& rank < myScene->y2)
 		return true;
 	else
 		return false;
@@ -143,7 +143,7 @@ bool HumanPlayer::positionWhitinBoard(int x, int y)
 // coordinatesToSquare
 //
 ///////////////////////////////////////////////////////////////////////////////
-void HumanPlayer::coordinatesToSquare(int x, int y, Square* square) {
-	square->x = int(floor(float(x - myScene->x1) / float(SQUARE_SIZE)));
-	square->y = int(floor(float(y - myScene->y1) / float(SQUARE_SIZE)));
+void HumanPlayer::coordinatesToSquare(int file, int rank, Square* square) {
+	square->file = int(floor(float(file - myScene->x1) / float(SQUARE_SIZE)));
+	square->rank = int(floor(float(rank - myScene->y1) / float(SQUARE_SIZE)));
 }

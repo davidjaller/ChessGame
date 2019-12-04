@@ -45,6 +45,7 @@ public:
 	void setCastelingNotPossible(casteling castelingType);
 
 	int POV(int rankNumber) const;
+	static PlayerColor getOpposite(PlayerColor color);
 	static int SquareToIndex(Square square);
 	static int SquareToIndex(int sqY, int sqX);
 	static void IndexToSquare(int index, Square* square);
@@ -53,7 +54,7 @@ protected:
 
 	void SetKingPos(Square sq);
 	void SetPieceOnSquare(int piece, Square sq);
-	void SetPieceOnSquare(int piece, int y, int x);
+	void SetPieceOnSquare(int piece, int rank, int file);
 	void MovePiece(Square from, Square to);
 	void RemovePiece(Square toSq);
 
@@ -72,7 +73,7 @@ private:
 	set<int> whiteAlivePieceIdxs; // second representation of pieces,
 	set<int> blackAlivePieceIdxs; //  sometimes it is inconvinent to loop to all squares in board
 	// 64 squares, index row by row from top left
-	// index 0 is x=0, y=0, index 7 is x7, y=0, index 63 is x=7, y=7
+	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
 
 	BoolStruct castelingPossible;
 

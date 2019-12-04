@@ -21,6 +21,17 @@ bool Board::IsFriendlyPiece(int piece) const
 		return false;
 }
 
+bool Board::IsEnemyPiece(Square sq) const
+{
+	int piece = getPieceOnSquare(sq);
+	PlayerColor turn = getTurn();
+	if (turn == PlayerColor::WHITE &&  piece < 0
+		|| turn == PlayerColor::BLACK && piece > 0)
+		return true;
+	else
+		return false;
+}
+
 bool Board::IsFriendlyPiece(Square square) const
 {
 	int piece = getPieceOnSquare(square);
@@ -58,32 +69,32 @@ void Board::makeMoveFromTo(Square from, Square to)
 	int toPiece = getPieceOnSquare(to);
 
 	// If rook moves update casteling posablity
-	if (fromPiece == WHITE_ROOK && from.y == 0)
+	if (fromPiece == WHITE_ROOK && from.rank == 0)
 		setCastelingNotPossible(WHITE_SHORT);
 
-	else if (fromPiece == WHITE_ROOK && from.x == 7)
+	else if (fromPiece == WHITE_ROOK && from.file == 7)
 		setCastelingNotPossible(WHITE_LONG);
 
-	else if (fromPiece == BLACK_ROOK && from.x == 0)
+	else if (fromPiece == BLACK_ROOK && from.file == 0)
 		setCastelingNotPossible(BLACK_SHORT);
 
-	else if (fromPiece == BLACK_ROOK && from.x == 7)
+	else if (fromPiece == BLACK_ROOK && from.file == 7)
 		setCastelingNotPossible(BLACK_LONG);
 
 	// king move
 	else if (abs(fromPiece) == KING)
 	{
 		// Check if a casteling move and move the rook
-		if (from.x == 4 && POV(from.y) == 0 && POV(to.y) == 0 && (to.x == 2 || to.x == 6)) {
+		if (from.file == 4 && POV(from.rank) == 0 && POV(to.rank) == 0 && (to.file == 2 || to.file == 6)) {
 			Square rookFrom = from;
 			Square rookTo = to;
-			if (to.x == 2) { // long
-				rookFrom.x = 0;
-				rookTo.x = 3;
+			if (to.file == 2) { // long
+				rookFrom.file = 0;
+				rookTo.file = 3;
 			}
-			else if (to.x == 6) { // short
-				rookFrom.x = 7;
-				rookTo.x = 5;
+			else if (to.file == 6) { // short
+				rookFrom.file = 7;
+				rookTo.file = 5;
 			}
 			MovePiece(rookFrom, rookTo);
 		}
@@ -107,7 +118,7 @@ void Board::makeMoveFromTo(Square from, Square to)
 		MovePiece(from, to);
 
 	//pawn promotion
-	if (abs(fromPiece) == PAWN && (to.y == 0 || to.y == 7))
+	if (abs(fromPiece) == PAWN && (to.rank == 0 || to.rank == 7))
 	{
 		PromoteQueen(to);
 	}

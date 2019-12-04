@@ -2,7 +2,7 @@
 
 //HumanPlayer::HumanPlayer() {};
 
-HumanPlayer::HumanPlayer(PlayerColor color, Board *pBoard, Scene* pScene) : tempBoard()
+HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard) : Player(pBoard, color) 
  {
 	SetColor(color);
 
@@ -10,7 +10,6 @@ HumanPlayer::HumanPlayer(PlayerColor color, Board *pBoard, Scene* pScene) : temp
 	squareFrom.y = 0;
 	squareTo.x = 0;
 	squareTo.y = 0;
-	gameBoard = pBoard;
 	myScene = pScene;
 
 	init();
@@ -83,11 +82,11 @@ bool HumanPlayer::stepTurn()
 	{
 		if (RulesManager::IsLegalMove(gameBoard, squareFrom, squareTo))
 		{
-			Square attackingSquare;
+			vector<Square> attackingSquares;
 			// Make move on temporary  board and se if king becomes or remaines threatened
 			tempBoard = *gameBoard;
 			tempBoard.makeMoveFromTo(squareFrom, squareTo);
-			if (!RulesManager::KingIsChecked(&tempBoard, &attackingSquare))
+			if (!RulesManager::KingIsChecked(&tempBoard, &attackingSquares))
 			{
 				*gameBoard = tempBoard;
 
@@ -105,10 +104,12 @@ bool HumanPlayer::stepTurn()
 			}
 			else
 			{
-				// If king is checked, take back temporary move and mark the square
+				// If king is checked, take back temporary move and mark the squares
 				// from which the attack comes
 				tempBoard = *gameBoard;
-				myScene->MarkSquare(attackingSquare);
+				for (vector<Square>::iterator it = attackingSquares.begin(); it != attackingSquares.end(); ++it) {
+					myScene->MarkSquare(*it);
+				}
 				myScene->UpdateScreen();
 				Sleep(200);
 				myScene->CreateScene();

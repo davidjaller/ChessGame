@@ -237,17 +237,22 @@ bool RulesManager::IsLegalKnightMove(const Board* board, Square from, Square to)
 		return false;
 }
 
-bool RulesManager::KingIsChecked(const Board* board, Square* attackingSquare)
+bool RulesManager::KingIsChecked(const Board* board, vector<Square>* attackingSquares)
 {
-	return PieceIsUnderThreat(board, board->GetKingPos(board->getTurn()), attackingSquare);
+	return PieceIsUnderThreat(board, board->GetKingPos(board->getTurn()), attackingSquares, true);
 }
 
-bool RulesManager::PieceIsUnderThreat(const Board* board, Square pieceSquare, Square* attackingSqaure)
+bool RulesManager::PieceIsUnderThreat(const Board* board, Square pieceSquare, vector<Square>* attackingSquares, bool stopAtFirst)
 {
 	// this can be optimized, by checking diagonal looking for enemy bishop, pawn or queen
 	// and sideways looking for caste or queen, and knigh-wise looking for knight,
 	// though this is quick enough for now
+	attackingSquares->clear();
 	Square sq;
+
+	// array<array <int, 2>, 8> directions = { { {-1,0}, {-1, -1}, {0, -1}, {1, -1} ,{1, 0}, {1, 1}, {0, 1}, {-1, 1} } };
+	// 
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -258,19 +263,20 @@ bool RulesManager::PieceIsUnderThreat(const Board* board, Square pieceSquare, Sq
 			{
 				if (IsLegalMove(board, sq, pieceSquare))
 				{
-					*attackingSqaure = sq;
-					return true;
+					attackingSquares->push_back(sq);
+					if (stopAtFirst)
+						return true;
 				}
 			}
 		}
 	}
-	return false;
+	return !attackingSquares->empty();
 }
 
 // Overloaded method without output pointer
 bool RulesManager::PieceIsUnderThreat(const Board* board, Square pieceSquare) {
 
-	Square sq;
+	vector<Square> sq;
 	
-	return PieceIsUnderThreat(board, pieceSquare, &sq);
+	return PieceIsUnderThreat(board, pieceSquare, &sq, true);
 }

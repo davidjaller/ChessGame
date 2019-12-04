@@ -122,6 +122,16 @@ set<int> FundamentalBoard::getBlackAlivePieceSet() const {
 	return blackAlivePieceIdxs;
 }
 
+set<int> FundamentalBoard::getAlivePieceSet(PlayerColor color) const {
+	
+	if (color == PlayerColor::WHITE)
+		return whiteAlivePieceIdxs;
+	else if (color == PlayerColor::BLACK)
+		return blackAlivePieceIdxs;
+	else
+		cout << "getAlivePieceSet: Invalid argument" << endl;
+}
+
 // Overloaded method for accesing alive pieces of sertain colour 
 // without needing to check every square
 // If needing all pieces better to use getBlackAlivePieceSet() and iterate trough

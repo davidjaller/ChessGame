@@ -2,6 +2,7 @@
 #ifndef _rulesManager_h
 #define _rulesManager_h
 #include "source/board/Board.h"
+#include<vector>
 class RulesManager
 {
 	public:
@@ -13,9 +14,9 @@ class RulesManager
 		static bool IsLegalQueenMove(const Board* board, Square from, Square to);
 		static bool IsLegalKnightMove(const Board* board, Square from, Square to);
 		static bool IsLegalCasteling(const Board* board, Square to);
-		static bool PieceIsUnderThreat(const Board* board, Square pieceSquare, Square* attackingSquare);
+		static bool PieceIsUnderThreat(const Board* board, Square pieceSquare, vector<Square>* attackingSquares, bool stopAtFirst);
 		static bool PieceIsUnderThreat(const Board* board, Square pieceSquare);
-		static bool KingIsChecked(const Board* board, Square* attackingSquare);
+		static bool KingIsChecked(const Board* board, vector<Square>* attackingSquares);
 		static bool IsLegalMove(const Board* board, Square from, Square to);
 
 };

@@ -4,7 +4,6 @@
 #pragma once
 
 #include "source/Player.h"
-#include "source/board/Board.h"
 #include "source/SharedTypes.h"
 #include <source/RulesManager.h>
 #include "source/io/Scene.h"
@@ -13,14 +12,13 @@
 
 class HumanPlayer : public Player {
 public:
-	HumanPlayer(PlayerColor color, Board *pBoard, Scene *pScene);
+	HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard);
 	void init();
 	bool stepTurn();
 	//bool canMove();
 	//bool isChecked();
 private:
 
-	Board* gameBoard; // pointer to actual board
 	Board tempBoard;// = Board(PlayerColor::WHITE); // humanPlayers own  
 	Scene* myScene;
 	HumanPlayerState state;

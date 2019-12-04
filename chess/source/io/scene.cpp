@@ -161,30 +161,21 @@ return surface ;
 ///////////////////////////////////////////////////////////////////////////////
 bool Scene::DrawPieces()
 {
-	Square sq;
 	int piece, x, y;
+	vector<PlayerColor> white_black = { PlayerColor::WHITE, PlayerColor::BLACK};
+	for (int i = 0; i < 2; i++) {
+		Square sq;
 
-	set<int> white = gameBoard->getWhiteAlivePieceSet();
-	for (set<int>::iterator it = white.begin(); it != white.end(); ++it) {
+		set<int> pieceSet = gameBoard->getAlivePieceSet(white_black[i]);
+		for (set<int>::iterator it = pieceSet.begin(); it != pieceSet.end(); ++it) {
 
-		Board::IndexToSquare(*it, &sq);
-		piece = gameBoard->getPieceOnSquare(sq);
-		x = x1 + SQUARE_SIZE * sq.x;
-		y = y1 + SQUARE_SIZE * sq.y;
-		PutPiece(x, y, piece);
+			Board::IndexToSquare(*it, &sq);
+			piece = gameBoard->getPieceOnSquare(sq);
+			x = x1 + SQUARE_SIZE * sq.x;
+			y = y1 + SQUARE_SIZE * sq.y;
+			PutPiece(x, y, piece);
 
-	}
-
-	set<int> black = gameBoard->getBlackAlivePieceSet();
-
-	for (set<int>::iterator it = black.begin(); it != black.end(); ++it) {
-
-		Board::IndexToSquare(*it, &sq);
-		piece = gameBoard->getPieceOnSquare(sq);
-		x = x1 + SQUARE_SIZE * sq.x;
-		y = y1 + SQUARE_SIZE * sq.y;
-		PutPiece(x, y, piece);
-
+		}
 	}
 
 	int i = 0;

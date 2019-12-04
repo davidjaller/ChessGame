@@ -17,11 +17,13 @@ extern array<array<int, 8>, 8> INIT_BOARD;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-Game::Game(Scene *pScene, Board *pBoard): player1(PlayerColor::WHITE, pBoard, pScene), player2(PlayerColor::BLACK, pBoard, pScene)
+Game::Game(Scene *pScene, Board *pBoard)// : player1(PlayerColor::WHITE, pScene, pBoard), player2(PlayerColor::BLACK, pScene, pBoard)
 {
 	gameBoard = pBoard;
 	myScene = pScene;
-	player = 1;
+	player = 0;
+	players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::WHITE, pScene, pBoard)));
+	players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::BLACK, pScene, pBoard)));
 }
 
 Game::~Game() {}
@@ -32,15 +34,14 @@ Game::~Game() {}
 ///////////////////////////////////////////////////////////////////////////////
 void Game::NewGame()
 {
-	player1.init();
-	player2.init();
+	players[0]->init();
+	players[1]->init();
 	gameBoard->InitBoard(INIT_BOARD, PlayerColor::WHITE);
 	myScene->CreateScene();
-	player = 1;
+	player = 0;
 }
 
 void Game::StepGame() {
-	if (player == 1){
 		// Add here:
 		// generate moves
 		// check if can move
@@ -49,20 +50,12 @@ void Game::StepGame() {
 
 		// abstract player class could have methods for isChecked and Can move and the member board
 
-		if (player1.stepTurn()) { //returns done when finished
-			player = 2;
-			gameBoard->setTurn(player2.GetColor());
+		if (players[player]->stepTurn()) { //returns done if finished
+			player = !player;
+			gameBoard->setTurn(players[player]->GetColor());
 		}
-	}
-	else if (player == 2) {
-		if(player2.stepTurn()){
-			player = 1;
-			gameBoard->setTurn(player1.GetColor());
-		}
-	}
 
 }
-
 
 
 

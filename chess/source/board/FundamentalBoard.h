@@ -34,6 +34,7 @@ public:
 
 	set<int> getWhiteAlivePieceSet() const;
 	set<int> getBlackAlivePieceSet() const;
+	set<int> getAlivePieceSet(PlayerColor color) const;
 
 	Square GetKingPos(PlayerColor pl) const;
 

@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <time.h>
+#include <vector>
 
 #include "source/board/Board.h"
 #include <source/RulesManager.h>
@@ -35,8 +36,9 @@ private:
 	Scene *myScene;
 	Board *gameBoard;
 	int player;
-	HumanPlayer player1;
-	HumanPlayer player2;
+	vector<unique_ptr<Player>> players;
+	//HumanPlayer player1;
+	//HumanPlayer player2;
 };
 
 #endif // _GAME_

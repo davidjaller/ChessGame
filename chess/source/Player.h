@@ -2,6 +2,8 @@
 #define _player_h
 #include "SharedTypes.h"
 #include "source/board/Board.h"
+#include "source/RulesManager.h"
+#include "source/engine/moveGenerator.h"
 class Player {
 	public:
 		Player(Board *pBoard, PlayerColor color);
@@ -12,12 +14,16 @@ class Player {
 		void SetColor(PlayerColor color);
 		PlayerColor GetColor();
 
-		//public isChecked();
-		//public canMove();
+		bool isChecked();
+		bool canMove();
+		bool generateMoves();
+		void resetMoves();
 	private:
-		PlayerColor color;
+		vector<Square> kingAttackers;
 	protected:
 		Board* gameBoard;
+		PlayerColor color;
+		list<Move> possibleMoves;
 
 };
 

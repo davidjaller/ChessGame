@@ -85,18 +85,20 @@ void Board::makeMoveFromTo(Square from, Square to)
 	else if (abs(fromPiece) == KING)
 	{
 		// Check if a casteling move and move the rook
-		if (from.file == 4 && POV(from.rank) == 0 && POV(to.rank) == 0 && (to.file == 2 || to.file == 6)) {
+		if (from.file == 4 && POV(from.rank) == 0 && POV(to.rank) == 0) {
 			Square rookFrom = from;
 			Square rookTo = to;
 			if (to.file == 2) { // long
 				rookFrom.file = 0;
 				rookTo.file = 3;
+				MovePiece(rookFrom, rookTo);
 			}
 			else if (to.file == 6) { // short
 				rookFrom.file = 7;
 				rookTo.file = 5;
+				MovePiece(rookFrom, rookTo);
 			}
-			MovePiece(rookFrom, rookTo);
+			
 		}
 
 		// if king move then casteling not possible in future

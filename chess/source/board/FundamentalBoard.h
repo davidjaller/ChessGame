@@ -45,7 +45,6 @@ public:
 	void setCastelingNotPossible(casteling castelingType);
 
 	int POV(int rankNumber) const;
-	static PlayerColor getOpposite(PlayerColor color);
 	static int SquareToIndex(Square square);
 	static int SquareToIndex(int sqY, int sqX);
 	static void IndexToSquare(int index, Square* square);

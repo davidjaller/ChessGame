@@ -48,7 +48,6 @@ typedef struct
 
 enum casteling { WHITE_SHORT, WHITE_LONG, BLACK_SHORT, BLACK_LONG };
 
-enum class HumanPlayerState { waitFirstInput, waitSecondInput, executeMove };
 enum class PlayerColor { WHITE = 0, BLACK = 1 };
 
 typedef struct

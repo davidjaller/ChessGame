@@ -14,15 +14,25 @@
 #include <string>
 using namespace std;
 
-array<array<int, 8>, 8> INIT_BOARD = { {
+/*array<array<int, 8>, 8> INIT_BOARD = { {
 						{-4, -3, -2, -5, -6, -2, -3, -4},
 						{-1, -1, -1, -1, -1, -1, -1, -1},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 1,  1,  1,  1,  0,  1,  1,  1},
-						{ 4,  3,  2,  5,  6,  0,  0,  4}
+						{ 1,  1,  1,  1,  1,  1,  1,  1},
+						{ 4,  3,  2,  5,  6,  2,  3,  4}
+} };*/
+array<array<int, 8>, 8> INIT_BOARD = { {
+						{-4, -3, -2, -5, -6, -2, -3, -4},
+						{-5, -1, -1, -1, -1, -1, -1, -1},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 4,  0,  0,  0,  6,  0,  0,  4}
 } };
 
 
@@ -130,12 +140,6 @@ set<int> FundamentalBoard::getAlivePieceSet(PlayerColor color) const {
 		return blackAlivePieceIdxs;
 	else
 		cout << "getAlivePieceSet: Invalid argument" << endl;
-}
-PlayerColor FundamentalBoard::getOpposite(PlayerColor color) {
-	if (color == PlayerColor::WHITE)
-		return PlayerColor::BLACK;
-	if (color == PlayerColor::BLACK)
-		return PlayerColor::WHITE;
 }
 
 // Overloaded method for accesing alive pieces of sertain colour 

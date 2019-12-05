@@ -17,6 +17,7 @@
 #include <source/RulesManager.h>
 #include "source/SharedTypes.h"
 #include "source/io/humanPlayer.h"
+#include "source/io/moveVisualiserPlayer.h"
 #include "source/Player.h"
 #include "source/io/Scene.h"
 
@@ -37,8 +38,6 @@ private:
 	Board *gameBoard;
 	int player;
 	vector<unique_ptr<Player>> players;
-	//HumanPlayer player1;
-	//HumanPlayer player2;
 };
 
 #endif // _GAME_

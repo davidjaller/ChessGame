@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="comon.cpp" />
     <ClCompile Include="sdl\SDL_gfxBlitFunc.c" />
     <ClCompile Include="sdl\SDL_gfxPrimitives.c" />
     <ClCompile Include="sdl\SDL_rotozoom.c" />
@@ -86,6 +87,7 @@
     <ClCompile Include="source\engine\moveManager.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\io\humanPlayer.cpp" />
+    <ClCompile Include="source\io\moveVisualiserPlayer.cpp" />
     <ClCompile Include="source\io\scene.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
@@ -98,11 +100,13 @@
     <ClInclude Include="sdl\SDL_rotozoom.h" />
     <ClInclude Include="source\board\Board.h" />
     <ClInclude Include="source\board\FundamentalBoard.h" />
+    <ClInclude Include="source\comon.h" />
     <ClInclude Include="source\engine\computerPlayer.h" />
     <ClInclude Include="source\engine\moveGenerator.h" />
     <ClInclude Include="source\engine\moveManager.h" />
     <ClInclude Include="source\Game.h" />
     <ClInclude Include="source\io\humanPlayer.h" />
+    <ClInclude Include="source\io\moveVisualiserPlayer.h" />
     <ClInclude Include="source\io\scene.h" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\RulesManager.h" />

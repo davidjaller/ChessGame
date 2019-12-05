@@ -10,6 +10,7 @@ public:
 	bool IsEmptySquare(Square sq) const;
 	bool IsFriendlyPiece(int piece) const;
 	bool IsFriendlyPiece(Square sq) const;
+	bool IsEnemyPiece(Square sq) const;
 	void PromoteQueen(Square square);
 	void MovePieceKill(Square from, Square to);
 	void MovePieceNoKill(Square from, Square to);

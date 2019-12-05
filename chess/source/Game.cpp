@@ -9,6 +9,7 @@
 #include <math.h>
 #endif
 #include "Game.h"
+#include "source/io/moveVisualiserPlayer.h"
 
 extern array<array<int, 8>, 8> INIT_BOARD;
 
@@ -22,8 +23,10 @@ Game::Game(Scene *pScene, Board *pBoard)// : player1(PlayerColor::WHITE, pScene,
 	gameBoard = pBoard;
 	myScene = pScene;
 	player = 0;
-	players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::WHITE, pScene, pBoard)));
+	players.push_back(unique_ptr<Player>(new MoveVisualizerPlayer(PlayerColor::WHITE, pScene, pBoard)));
+	//players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::WHITE, pScene, pBoard)));
 	players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::BLACK, pScene, pBoard)));
+	
 }
 
 Game::~Game() {}
@@ -42,14 +45,10 @@ void Game::NewGame()
 }
 
 void Game::StepGame() {
-		// Add here:
-		// generate moves
-		// check if can move
-		// if player is computer, use the moves generated for first level search
-		// same for player 2
+		
+		// Add Check for check mate or draw here!
 
-		// abstract player class could have methods for isChecked and Can move and the member board
-
+		bool canMove = players[player]->generateMoves();
 		if (players[player]->stepTurn()) { //returns done if finished
 			player = !player;
 			gameBoard->setTurn(players[player]->GetColor());

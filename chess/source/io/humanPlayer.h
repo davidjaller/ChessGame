@@ -10,6 +10,8 @@
 #include <time.h>
 #include <windows.h>
 
+enum class HumanPlayerState { waitFirstInput, waitSecondInput, executeMove };
+
 class HumanPlayer : public Player {
 public:
 	HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard);

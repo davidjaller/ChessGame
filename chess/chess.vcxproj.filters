@@ -63,6 +63,15 @@
     <ClCompile Include="comon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\engine\evaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\engine\miniMax.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\board\Piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sdl\SDL_gfxBlitFunc.h">
@@ -114,6 +123,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\comon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\evaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\engine\miniMax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\board\Piece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

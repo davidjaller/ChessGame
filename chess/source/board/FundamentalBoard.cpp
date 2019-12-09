@@ -14,7 +14,7 @@
 #include <string>
 using namespace std;
 
-/*array<array<int, 8>, 8> INIT_BOARD = { {
+array<array<int, 8>, 8> INIT_BOARD = { {
 						{-4, -3, -2, -5, -6, -2, -3, -4},
 						{-1, -1, -1, -1, -1, -1, -1, -1},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
@@ -23,17 +23,17 @@ using namespace std;
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 1,  1,  1,  1,  1,  1,  1,  1},
 						{ 4,  3,  2,  5,  6,  2,  3,  4}
-} };*/
-array<array<int, 8>, 8> INIT_BOARD = { {
-						{-4, -3, -2, -5, -6, -2, -3, -4},
-						{-5, -1, -1, -1, -1, -1, -1, -1},
-						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 4,  0,  0,  0,  6,  0,  0,  4}
 } };
+//array<array<int, 8>, 8> INIT_BOARD = { {
+//						{-1, -4, -2, -5, -6, -2, -4, -1},
+//						{ 0,   0,  0,  0,  0,  0,  0, 0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 4,  0,  0,  0,  6,  0,  0,  4}
+//} };
 
 
 
@@ -72,6 +72,9 @@ void FundamentalBoard::InitBoard(array<array<int, 8>, 8> initMatrix, PlayerColor
 	castelingPossible.blackShort = 1;
 	castelingPossible.whiteLong = 1;
 	castelingPossible.whiteShort = 1;
+
+	outedWhite.clear();
+	outedBlack.clear();
 	this->turn = turn;
 }
 
@@ -132,12 +135,12 @@ set<int> FundamentalBoard::getBlackAlivePieceSet() const {
 	return blackAlivePieceIdxs;
 }
 
-set<int> FundamentalBoard::getAlivePieceSet(PlayerColor color) const {
+const set<int>* FundamentalBoard::getAlivePieceSet(PlayerColor color) const {
 	
 	if (color == PlayerColor::WHITE)
-		return whiteAlivePieceIdxs;
+		return &whiteAlivePieceIdxs;
 	else if (color == PlayerColor::BLACK)
-		return blackAlivePieceIdxs;
+		return &blackAlivePieceIdxs;
 	else
 		cout << "getAlivePieceSet: Invalid argument" << endl;
 }
@@ -151,18 +154,18 @@ int FundamentalBoard::getPieceOnSquare(PlayerColor player, int i) const {
 		if (i < blackAlivePieceIdxs.size())
 			// this is a litle slow  
 			index = *std::next(blackAlivePieceIdxs.begin(), i);
-		Square sq;
-		IndexToSquare(index, &sq);
-		return getPieceOnSquare(sq);
+		return getPieceOnSquare(IndexToSquare(index));
 	}
 	return 0;
 }
 
-void FundamentalBoard::IndexToSquare(int index, Square* square) {
+Square FundamentalBoard::IndexToSquare(int index) {
 	// 64 squares, index row by row from top left
 	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
-	square->file = index % 8;
-	square->rank = index / 8;
+	Square square;
+	square.file = index % 8;
+	square.rank = index / 8;
+	return square;
 }
 
 int FundamentalBoard::SquareToIndex(Square square) {
@@ -256,14 +259,19 @@ void FundamentalBoard::setCastelingNotPossible(casteling castelingType) {
 	switch (castelingType) {
 	case BLACK_LONG:
 		 castelingPossible.blackLong = false;
+		 break;
 	case BLACK_SHORT:
 		castelingPossible.blackShort = false;
+		break;
 	case WHITE_SHORT:
 		castelingPossible.whiteShort = false;
+		break;
 	case WHITE_LONG:
 		castelingPossible.whiteLong = false;
+		break;
 	default:
 		printf("setCastelingNotPossible: illegal argument");
+		break;
 	}
 }
 

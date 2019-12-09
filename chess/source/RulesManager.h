@@ -15,7 +15,7 @@ class RulesManager
 		static bool IsLegalKingMove(const Board* board, Square from, Square to);
 		static bool IsLegalQueenMove(const Board* board, Square from, Square to);
 		static bool IsLegalKnightMove(const Board* board, Square from, Square to);
-		static bool IsLegalCasteling(const Board* board, Square to);
+		static bool IsLegalCasteling(const Board* board, Square from, Square to);
 		static bool SquareIsAttacked(const Board* board, Square square, vector<Square>* attackingSquares,
 			PlayerColor attackingColor, bool stopAtFirst);
 		static bool SquareIsAttacked(const Board* board, Square square, PlayerColor attackingColor);

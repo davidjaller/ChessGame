@@ -22,7 +22,7 @@ public:
 private:
 
 	Board tempBoard;// = Board(PlayerColor::WHITE); // humanPlayers own  
-	Scene* myScene;
+	Scene* scene;
 	HumanPlayerState state;
 
 	Square squareFrom;

@@ -143,63 +143,56 @@ bool RulesManager::IsLegalRookMove(const Board* board, Square from, Square to)
 
 bool RulesManager::IsLegalKingMove(const Board* board, Square from, Square to){
 
-	if (from.file == 4 && board->POV(from.rank) == 0 && board->POV(to.rank) == 0 && (to.file == 2 || to.file == 6))
-		// TODO: find out why this check is needed
-	{
-		if (IsLegalCasteling(board, to))
-			return true;
-		else
-			return false;
-	}
+	if (IsLegalCasteling(board, from, to))
+		return true;
 	else if (abs(to.file - from.file) + abs(to.rank - from.rank) == 1 || abs(to.file - from.file) == abs(to.rank - from.rank))
 		return true;
 	else
 		return false;
 }
 
-bool RulesManager::IsLegalCasteling(const Board* board, Square to){
+bool RulesManager::IsLegalCasteling(const Board* board, Square from, Square to){
 
 	Square sq = to;
+	if (from.file == 4 && board->POV(from.rank)) {
+		// Long
+		if (to.file == 2) {
+			if ((to.rank == 0 && board->getCastelingPossible(BLACK_LONG)) ||
+				(to.rank == 7 && board->getCastelingPossible(WHITE_LONG))) {
+				for (int i = 1; i < 4; i++) {
+					sq.file = i;
+					if (!board->IsEmptySquare(sq))
+						return false;
+				}
+				for (int i = 2; i < 5; i++) {
+					sq.file = i;
+					if (SquareIsAttacked(board, sq, getOpposite(board->getTurn())))
+						return false;
+				}
 
-	// Long
-	if (to.file == 2) {
-		if ((to.rank == 0 && board->getCastelingPossible(BLACK_LONG)) ||
-			(to.rank == 7 && board->getCastelingPossible(WHITE_LONG))) {
-			for (int i = 1; i < 4; i++) {
-				sq.file = i;
-				if (!board->IsEmptySquare(sq))
-					return false;
+				return true;
 			}
-			for (int i = 2; i < 5; i++) {
-				sq.file = i;
-				if (SquareIsAttacked(board, sq, getOpposite(board->getTurn())))
-					return false;
+		}
+		// short
+		else if (to.file == 6) {
+			if ((to.rank == 0 && board->getCastelingPossible(BLACK_SHORT)) ||
+				(to.rank == 7 && board->getCastelingPossible(WHITE_SHORT))) {
+				for (int i = 6; i < 7; i++) {
+					sq.file = i;
+					if (!board->IsEmptySquare(to))
+						return false;
+				}
+				for (int i = 5; i < 7; i++) {
+					sq.file = i;
+					if (SquareIsAttacked(board, to, getOpposite(board->getTurn())))
+						return false;
+				}
+				return true;
 			}
-
-			return true;
 		}
 	}
-	// short
-	else if (to.file == 6) {
-		if ((to.rank == 0 && board->getCastelingPossible(BLACK_SHORT)) ||
-			(to.rank == 7 && board->getCastelingPossible(WHITE_SHORT))) {
-			for (int i = 6; i < 7; i++) {
-				sq.file = i;
-				if (!board->IsEmptySquare(to))
-					return false;
-			}
-			for (int i = 5; i < 7; i++) {
-				sq.file = i;
-				if (SquareIsAttacked(board, to, getOpposite(board->getTurn())))
-					return false;
-			}
-			return true;
-		}
-	}
-	
 	
 	return false;
-
 }
 
 bool RulesManager::IsLegalQueenMove(const Board* board, Square from, Square to)
@@ -234,10 +227,9 @@ bool RulesManager::SquareIsAttacked(const Board* board, Square square, vector<Sq
 	attackingSquares->clear();
 	Square sq;
 	
-	set<int> enemySet = board->getAlivePieceSet(attackingColor);
-	
-	for (set<int>::iterator it = enemySet.begin(); it != enemySet.end(); ++it) {
-		Board::IndexToSquare(*it, &sq);
+	set<int>::iterator it = board->getAlivePieceSet(attackingColor)->begin();
+	for (; it != board->getAlivePieceSet(attackingColor)->end(); ++it) {
+		sq = Board::IndexToSquare(*it);
 			if (!board->IsEmptySquare(sq) && !board->IsFriendlyPiece(sq))
 			{
 				if (IsLegalMove(board, sq, square))

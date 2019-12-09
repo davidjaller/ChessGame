@@ -34,7 +34,7 @@ public:
 
 	set<int> getWhiteAlivePieceSet() const;
 	set<int> getBlackAlivePieceSet() const;
-	set<int> getAlivePieceSet(PlayerColor color) const;
+	const set<int>* getAlivePieceSet(PlayerColor color) const;
 
 	Square GetKingPos(PlayerColor pl) const;
 
@@ -47,7 +47,7 @@ public:
 	int POV(int rankNumber) const;
 	static int SquareToIndex(Square square);
 	static int SquareToIndex(int sqY, int sqX);
-	static void IndexToSquare(int index, Square* square);
+	static Square IndexToSquare(int index);
 
 protected:
 

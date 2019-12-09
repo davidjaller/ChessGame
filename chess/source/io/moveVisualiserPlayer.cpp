@@ -21,13 +21,14 @@ void MoveVisualizerPlayer::init() {
 ///////////////////////////////////////////////////////////////////////////////
 bool MoveVisualizerPlayer::stepTurn()
 {	
+	cout << " Score:   " << Evaluator::evaluatePosition(gameBoard, color) << endl;
+
 
 	for (list<Move>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); ++it) {
 		tempBoard = *gameBoard;
 		gameBoard->makeMoveFromTo(it->from, it->to);
 		myScene->UpdateScreen();
 		myScene->CreateScene();
-
 		Sleep(200);
 		*gameBoard = tempBoard;
 		myScene->UpdateScreen();
@@ -35,5 +36,7 @@ bool MoveVisualizerPlayer::stepTurn()
 		Sleep(200);
 
 	}
+
+
 	return true;
 }

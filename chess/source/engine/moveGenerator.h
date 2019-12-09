@@ -10,6 +10,8 @@
 class MoveGenerator {
 public:
 	static int generate(const Board* board, Square from, int Piece, list<Move> *moveList);
+
+	static int generateAll(const Board* board, list<Move>* moveList);
 private:
 	static int generateForPawn(const Board* board, Square from, int piece, list<Move> *moveList);
 
@@ -28,6 +30,8 @@ private:
 	static int generateGetOutOfAttack(const Board* board, Square attackedSquare, vector<Square> attackingSquares, list<Move>* moveList);
 	
 	static bool movingIntoCheck(const Board* board, Move move);
+
+	
 
 };
 

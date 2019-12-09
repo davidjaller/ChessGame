@@ -38,20 +38,24 @@ int IsKeyDown (int pKey)
 int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+	
 	Board board = Board(); 
 	Scene scene(&board);
 	Game game(&scene, &board);
 
 	scene.CreateScene();
 	scene.UpdateScreen();
+	srand(time(NULL));
 	
 	// ----- Main Loop -----
 	
 	while(!IsKeyDown (SDLK_ESCAPE))
 	{
-		game.StepGame();
+		bool finnished = game.StepGame();
 		scene.UpdateScreen();
-		if(IsKeyDown(SDLK_F1))
+		if(IsKeyDown(SDLK_F1) || finnished)
 		{
 			game.NewGame();
 		}

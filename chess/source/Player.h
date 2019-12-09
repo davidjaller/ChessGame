@@ -3,6 +3,7 @@
 #include "SharedTypes.h"
 #include "source/board/Board.h"
 #include "source/RulesManager.h"
+#include "source/engine/evaluator.h"
 #include "source/engine/moveGenerator.h"
 class Player {
 	public:
@@ -16,7 +17,7 @@ class Player {
 
 		bool isChecked();
 		bool canMove();
-		bool generateMoves();
+		void generateMoves();
 		void resetMoves();
 	private:
 		vector<Square> kingAttackers;

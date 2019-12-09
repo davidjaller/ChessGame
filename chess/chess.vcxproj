@@ -82,7 +82,10 @@
     <ClCompile Include="sdl\SDL_rotozoom.c" />
     <ClCompile Include="source\board\Board.cpp" />
     <ClCompile Include="source\board\FundamentalBoard.cpp" />
+    <ClCompile Include="source\board\Piece.cpp" />
     <ClCompile Include="source\engine\computerPlayer.cpp" />
+    <ClCompile Include="source\engine\evaluator.cpp" />
+    <ClCompile Include="source\engine\miniMax.cpp" />
     <ClCompile Include="source\engine\moveGenerator.cpp" />
     <ClCompile Include="source\engine\moveManager.cpp" />
     <ClCompile Include="source\Game.cpp" />
@@ -100,8 +103,11 @@
     <ClInclude Include="sdl\SDL_rotozoom.h" />
     <ClInclude Include="source\board\Board.h" />
     <ClInclude Include="source\board\FundamentalBoard.h" />
+    <ClInclude Include="source\board\Piece.h" />
     <ClInclude Include="source\comon.h" />
     <ClInclude Include="source\engine\computerPlayer.h" />
+    <ClInclude Include="source\engine\evaluator.h" />
+    <ClInclude Include="source\engine\miniMax.h" />
     <ClInclude Include="source\engine\moveGenerator.h" />
     <ClInclude Include="source\engine\moveManager.h" />
     <ClInclude Include="source\Game.h" />

@@ -166,11 +166,11 @@ bool Scene::DrawPieces()
 	for (int i = 0; i < 2; i++) {
 		Square sq;
 
-		set<int> pieceSet = gameBoard->getAlivePieceSet(white_black[i]);
-		for (set<int>::iterator it = pieceSet.begin(); it != pieceSet.end(); ++it) {
+		set<int>::iterator it = gameBoard->getAlivePieceSet(white_black[i])->begin();
 
-			Board::IndexToSquare(*it, &sq);
-			piece = gameBoard->getPieceOnSquare(sq);
+		for (; it != gameBoard->getAlivePieceSet(white_black[i])->end(); ++it) {
+			sq = Board::IndexToSquare(*it);
+			int piece = gameBoard->getPieceOnSquare(sq);
 			file = x1 + SQUARE_SIZE * sq.file;
 			rank = y1 + SQUARE_SIZE * sq.rank;
 			PutPiece(file, rank, piece);

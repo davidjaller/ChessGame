@@ -10,7 +10,7 @@ HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard) : Play
 	squareFrom.rank = 0;
 	squareTo.file = 0;
 	squareTo.rank = 0;
-	myScene = pScene;
+	scene = pScene;
 
 	init();
 	state = HumanPlayerState::waitFirstInput;
@@ -43,7 +43,7 @@ bool HumanPlayer::stepTurn()
 
 				if (gameBoard->IsFriendlyPiece(squareFrom))
 				{
-					myScene->MarkSquare(squareFrom); // Mark square with active piece
+					scene->MarkSquare(squareFrom); // Mark square with active piece
 					state = HumanPlayerState::waitSecondInput;
 				}
 			}
@@ -65,13 +65,13 @@ bool HumanPlayer::stepTurn()
 
 				if (!gameBoard->IsFriendlyPiece(squareTo))
 				{
-					myScene->MarkSquare(squareTo);
+					scene->MarkSquare(squareTo);
 					state = HumanPlayerState::executeMove;
 
 				}
 				else
 				{
-					myScene->CreateScene();
+					scene->CreateScene();
 					state = HumanPlayerState::waitFirstInput; // If friendly piece choosed again, dont mark
 				}
 			}
@@ -90,12 +90,12 @@ bool HumanPlayer::stepTurn()
 			{
 				*gameBoard = tempBoard;
 
-				myScene->CreateScene();
-				myScene->MarkSquare(squareFrom);
-				myScene->MarkSquare(squareTo);
-				myScene->UpdateScreen();
+				scene->CreateScene();
+				scene->MarkSquare(squareFrom);
+				scene->MarkSquare(squareTo);
+				scene->UpdateScreen();
 				Sleep(500);
-				myScene->CreateScene();
+				scene->CreateScene();
 
 				// check for check mate should happen here
 				turnDone = true;
@@ -108,11 +108,11 @@ bool HumanPlayer::stepTurn()
 				// from which the attack comes
 				tempBoard = *gameBoard;
 				for (vector<Square>::iterator it = attackingSquares.begin(); it != attackingSquares.end(); ++it) {
-					myScene->MarkSquare(*it);
+					scene->MarkSquare(*it);
 				}
-				myScene->UpdateScreen();
+				scene->UpdateScreen();
 				Sleep(200);
-				myScene->CreateScene();
+				scene->CreateScene();
 				state = HumanPlayerState::waitFirstInput;
 
 			}
@@ -120,7 +120,7 @@ bool HumanPlayer::stepTurn()
 		else
 		{
 			// Move not legal
-			myScene->CreateScene();
+			scene->CreateScene();
 			state = HumanPlayerState::waitFirstInput;
 		}
 	}
@@ -133,7 +133,7 @@ bool HumanPlayer::stepTurn()
 ///////////////////////////////////////////////////////////////////////////////
 bool HumanPlayer::positionWhitinBoard(int file, int rank)
 {
-	if (file > myScene->x1&& file < myScene->x2 && rank > myScene->y1&& rank < myScene->y2)
+	if (file > scene->x1&& file < scene->x2 && rank > scene->y1&& rank < scene->y2)
 		return true;
 	else
 		return false;
@@ -144,6 +144,6 @@ bool HumanPlayer::positionWhitinBoard(int file, int rank)
 //
 ///////////////////////////////////////////////////////////////////////////////
 void HumanPlayer::coordinatesToSquare(int file, int rank, Square* square) {
-	square->file = int(floor(float(file - myScene->x1) / float(SQUARE_SIZE)));
-	square->rank = int(floor(float(rank - myScene->y1) / float(SQUARE_SIZE)));
+	square->file = int(floor(float(file - scene->x1) / float(SQUARE_SIZE)));
+	square->rank = int(floor(float(rank - scene->y1) / float(SQUARE_SIZE)));
 }

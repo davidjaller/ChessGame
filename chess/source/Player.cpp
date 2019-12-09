@@ -24,27 +24,17 @@ bool Player::isChecked() {
 	return checked;
 }
 
-bool Player::generateMoves(){
+void Player::generateMoves(){
 	resetMoves();
-
-
-	int count = 0;
-	set<int> myPieces = gameBoard->getAlivePieceSet(color);
-	Square sq;
-	for (set<int>::iterator it = myPieces.begin(); it != myPieces.end(); ++it) {
-		Board::IndexToSquare(*it, &sq);
-		count += MoveGenerator::generate(gameBoard, sq, gameBoard->getPieceOnSquare(sq), &possibleMoves);
-	}
-	return count > 0;
+	MoveGenerator::generateAll(gameBoard, &possibleMoves);
 }
 
 void Player::resetMoves() {
 	possibleMoves.clear();
 }
 
-
-
 bool Player::canMove() {
-	return false;
+	resetMoves();
+	return MoveGenerator::generateAll(gameBoard, &possibleMoves) > 0;
 }
 

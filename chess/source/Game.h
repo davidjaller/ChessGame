@@ -18,6 +18,7 @@
 #include "source/SharedTypes.h"
 #include "source/io/humanPlayer.h"
 #include "source/io/moveVisualiserPlayer.h"
+#include "source/engine/computerPlayer.h"
 #include "source/Player.h"
 #include "source/io/Scene.h"
 
@@ -30,7 +31,7 @@ public:
 
 	Game (Scene *pScene, Board *pBoard);
 	~Game();
-	void StepGame();
+	bool StepGame();
 	void NewGame();
 
 private:

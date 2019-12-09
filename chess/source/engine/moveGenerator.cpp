@@ -2,7 +2,7 @@
 
 int MoveGenerator::generate(const Board* board, Square from, int piece, list<Move> *moveList) {
 
-	switch (piece)
+	switch (abs(piece))
 	{
 	case PAWN:	return generateForPawn(board, from, piece, moveList);
 
@@ -18,6 +18,18 @@ int MoveGenerator::generate(const Board* board, Square from, int piece, list<Mov
 	}
 
 	return 0;
+}
+
+int MoveGenerator::generateAll(const Board* board, list<Move>* moveList) {
+
+	Square sq;
+	int count = 0;
+	set<int>::iterator it = board->getAlivePieceSet(board->getTurn())->begin();
+	for (; it != board->getAlivePieceSet(board->getTurn())->end(); ++it) {
+		sq = Board::IndexToSquare(*it);
+		count += MoveGenerator::generate(board, sq, board->getPieceOnSquare(sq), moveList);
+	}
+	return count;
 }
 
 int MoveGenerator::generateForBishop(const Board* board, Square from, int piece, list<Move> *moveList) {
@@ -171,13 +183,13 @@ int MoveGenerator::generateForKing(const Board* board, Square from, int piece, l
 	move.to.rank = from.rank;
 	// Long
 	move.to.file = 2;
-	if (RulesManager::IsLegalCasteling(board, move.to)) {
+	if (RulesManager::IsLegalCasteling(board, move.from, move.to)) {
 		moveList->push_back(move);
 		count++;
 	}
 	// Short
 	move.to.file = 6;
-	if (RulesManager::IsLegalCasteling(board, move.to)) {
+	if (RulesManager::IsLegalCasteling(board, move.from, move.to)) {
 		moveList->push_back(move);
 		count++;
 	}

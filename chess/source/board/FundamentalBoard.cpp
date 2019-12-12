@@ -53,6 +53,8 @@ void FundamentalBoard::InitBoard(array<array<int, 8>, 8> initMatrix, PlayerColor
 		{
 			board[rank][file] = initMatrix[rank][file];
 			if (board[rank][file] > 0) {
+				Piece piece = Piece(board[rank][file]);
+				whiteAlivePieceIdxs.insert(std::pair<int, Piece>(SquareToIndex(rank, file), 100));
 				whiteAlivePieceIdxs.insert(SquareToIndex(rank, file));
 				if (board[rank][file] == WHITE_KING) {
 					whiteKing.file = file;

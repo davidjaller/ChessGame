@@ -13,6 +13,7 @@ PlayerColor getOpposite(PlayerColor color);
 void printMove(Move move);
 string moveToStr(Move move);
 void printMoveScore(Move move, float score);
+int SquareToIndex(Square sq);
 
 bool isSliderPiece(int piece);
 #endif

@@ -31,7 +31,7 @@ private:
 	
 	static bool movingIntoCheck(const Board* board, Move move);
 
-	
+	static bitBoard_t getPinMask(const Board* board, Square from, Square kingSquare);
 
 };
 

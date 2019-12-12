@@ -233,3 +233,65 @@ bool MoveGenerator::movingIntoCheck(const Board* board, Move move) {
 	vector<Square> sqrs;
 	return RulesManager::KingIsChecked(&tempBoard, &sqrs, board->getTurn());
 }
+
+bitBoard_t MoveGenerator::getPinMask(const Board* board, Square thisSquare, Square kingSquare) {
+
+
+	int rankDist = kingSquare.rank - thisSquare.rank;
+	int fileDist = kingSquare.rank - thisSquare.rank;
+	bitBoard_t pinMask = 0;
+	bool isPinned = false;
+
+	// Are we on same ray as king?
+	if (fileDist == 0 || rankDist == 0 || fileDist == rankDist) {
+
+		Square direction(0,0); //positive towards king
+		if (rankDist > 0)
+			direction.rank = 1;
+		else if (rankDist < 0)
+			direction.rank = -1;
+		if (fileDist > 0)
+			direction.file = 1;
+		else if (fileDist < 0)
+			direction.file = -1;
+
+		// First check squares between king and our piece, if anyone there no pinn
+		Square sq = thisSquare;
+		while ((sq+=direction)!=kingSquare && insideBoard(sq)) {
+			//Step towards king along ray 
+			if (!board->IsEmptySquare(sq))
+				return 0xFFFFFFFF;
+			else
+				pinMask |= 1 << SquareToIndex(sq);
+		}
+		
+		//If we have not returned it means we are closest to king
+		// Now move other direction to see if there is a relevant slider
+		sq = thisSquare;
+		while (insideBoard(sq-=direction)) {
+
+			int pieceType = abs(board->getPieceOnSquare(sq));
+
+			if (board->IsEmptySquare(sq))
+				pinMask |= 1 << SquareToIndex(sq);
+
+			else if (board->IsEnemyPiece(sq) &&
+				( ( pieceType == ROOK && (rankDist == 0 || fileDist == 0) ) ||
+				(pieceType == BISHOP && rankDist == fileDist) ||
+				pieceType == QUEEN)) 
+			{
+				pinMask |= 1 << SquareToIndex(sq);
+				isPinned = true;
+				break;
+			}
+			else // some other piece blocking
+				break;
+		}
+	}
+
+	if (isPinned)
+		return pinMask;
+	else
+		return 0xFFFFFFFF; // if not pinned, all 1's
+	
+}

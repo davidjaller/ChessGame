@@ -9,11 +9,41 @@
 #ifndef _shared_const_h_
 #define _shared_const_h_
 #include <list>
-typedef struct
+
+typedef uint64_t bitBoard_t;
+
+struct Square
 {
 	int file;
 	int rank;
-}Square;
+
+	Square(int rank = 0, int file = 0)
+		: rank(rank), file(file){}
+
+	Square operator+(const Square& a) const{
+		return Square(a.file + file, a.rank + rank);
+	}
+	Square operator+=(const Square& a) {
+		file += a.file;
+		rank += a.rank;
+	}
+
+	Square operator-(const Square& a) const{
+		return Square(file - a.file, rank - a.rank);
+	}
+	Square operator-=(const Square& a) {
+		file -= a.file; 
+		rank -= a.rank;
+	}
+
+	bool operator==(const Square& a) const{
+		return (file == a.file && rank == a.rank);
+	}
+
+	bool operator!=(const Square& a) const{
+		return !(file == a.file && rank == a.rank);
+	}
+};
 
 typedef struct
 {

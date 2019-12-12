@@ -14,6 +14,7 @@
 #include <array>
 #include <set>
 #include "source/SharedTypes.h"
+#include "source/board/piece.h"
 
 using namespace std;
 
@@ -69,8 +70,8 @@ private:
 
 	PlayerColor turn;
 
-	set<int> whiteAlivePieceIdxs; // second representation of pieces,
-	set<int> blackAlivePieceIdxs; //  sometimes it is inconvinent to loop to all squares in board
+	map<Piece, int> whiteAlivePieces; 
+	map<Piece,int> blackAlivePieces; 
 	// 64 squares, index row by row from top left
 	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
 

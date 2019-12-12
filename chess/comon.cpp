@@ -62,3 +62,9 @@ string moveToStr(Move move) {
 	else
 		return pieceStr + fileChar + rankChar;
 }
+
+int SquareToIndex(Square sq) {
+	// 64 squares, index row by row from top left
+	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
+	return sq.rank * 8 + sq.file;
+}

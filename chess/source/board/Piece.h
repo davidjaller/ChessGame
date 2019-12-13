@@ -3,7 +3,7 @@
 #define _piece_h
 #include "source/SharedTypes.h"
 #include "source/board/board.h"
-#include "source/RulesManager.h"
+#include "source/comon.h"
 
 class Piece {
 public:

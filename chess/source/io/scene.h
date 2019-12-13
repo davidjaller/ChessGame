@@ -12,7 +12,7 @@
 #include <SDL.h>		
 #include <set>
 #include "sdl/SDL_gfxprimitives.h"	
-#include "source/board/Board.h"
+#include "source/board/position.h"
 
 #pragma comment (lib, "../../SDL-1.2.15/lib/x86/SDL.lib")
 
@@ -50,7 +50,7 @@ public:
 	int y2;
 	
 	// CONSTRUCTOR
-	Scene(Board *pBoard);
+	Scene(Position *pPosition);
 
 	//DESTRUCTOR
 	~Scene();
@@ -68,7 +68,7 @@ public:
 private:
 
 	// VARIABLES
-	Board *gameBoard;
+	Position *gamePosition;
 	SDL_Surface* bitmap;
 
 	//METHODS

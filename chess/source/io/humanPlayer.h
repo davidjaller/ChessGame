@@ -14,14 +14,14 @@ enum class HumanPlayerState { waitFirstInput, waitSecondInput, executeMove };
 
 class HumanPlayer : public Player {
 public:
-	HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard);
+	HumanPlayer(PlayerColor color, Scene* pScene, Position* pPosition);
 	void init();
 	bool stepTurn();
 	//bool canMove();
 	//bool isChecked();
 private:
 
-	Board tempBoard;// = Board(PlayerColor::WHITE); // humanPlayers own  
+	Position tempPosition;// = Position(PlayerColor::WHITE); // humanPlayers own  
 	Scene* scene;
 	HumanPlayerState state;
 

@@ -1,6 +1,6 @@
 #include "source/io/moveVisualiserPlayer.h"
 
-MoveVisualizerPlayer::MoveVisualizerPlayer(PlayerColor color, Scene* pScene, Board* pBoard) : Player(pBoard, color)
+MoveVisualizerPlayer::MoveVisualizerPlayer(PlayerColor color, Scene* pScene, Position* pPosition) : Player(pPosition, color)
  {
 	SetColor(color);
 
@@ -11,7 +11,7 @@ MoveVisualizerPlayer::MoveVisualizerPlayer(PlayerColor color, Scene* pScene, Boa
 }
 
 void MoveVisualizerPlayer::init() {
-	tempBoard = *gameBoard;
+	tempPosition = *gamePosition;
 	turnDone = false;
 }
 
@@ -21,16 +21,16 @@ void MoveVisualizerPlayer::init() {
 ///////////////////////////////////////////////////////////////////////////////
 bool MoveVisualizerPlayer::stepTurn()
 {	
-	cout << " Score:   " << Evaluator::evaluatePosition(gameBoard, color) << endl;
+	cout << " Score:   " << Evaluator::evaluatePosition(gamePosition, color) << endl;
 
 
 	for (list<Move>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); ++it) {
-		tempBoard = *gameBoard;
-		gameBoard->makeMoveFromTo(it->from, it->to);
+		tempPosition = *gamePosition;
+		gamePosition->makeMoveFromTo(it->from, it->to);
 		myScene->UpdateScreen();
 		myScene->CreateScene();
 		Sleep(200);
-		*gameBoard = tempBoard;
+		*gamePosition = tempPosition;
 		myScene->UpdateScreen();
 		myScene->CreateScene();
 		Sleep(200);

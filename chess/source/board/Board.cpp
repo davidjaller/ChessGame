@@ -1,128 +1,162 @@
+/*****************************************************************************************
+/* File: Board.cpp
+
+/*
+/*****************************************************************************************/
+
+// ----- Includes -----
 
 #include "source/board/Board.h"
+#include "source/Game.h"
+#include "windows.h"
+#include <stdio.h>
+#include <math.h>
+#include <string>
+using namespace std;
 
-Board::Board() {};
+array<array<int, 8>, 8> INIT_BOARD = { {
+						{-4, -3, -2, -5, -6, -2, -3, -4},
+						{-1, -1, -1, -1, -1, -1, -1, -1},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 0,  0,  0,  0,  0,  0,  0,  0},
+						{ 1,  1,  1,  1,  1,  1,  1,  1},
+						{ 4,  3,  2,  5,  6,  2,  3,  4}
+} };
+//array<array<int, 8>, 8> INIT_BOARD = { {
+//						{-1, -4, -2, -5, -6, -2, -4, -1},
+//						{ 0,   0,  0,  0,  0,  0,  0, 0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ 4,  0,  0,  0,  6,  0,  0,  4}
+//} };
 
 
-bool Board::IsEmptySquare(Square sq) const
+
+Board::Board()
 {
-	if (getPieceOnSquare(sq) == 0)
-		return true;
+	board = { {} };
+
+}
+
+Board::~Board() {}
+
+Square Board::GetKingPos(PlayerColor pl) const
+{
+
+	if (pl == PlayerColor::WHITE)
+		return whiteKing;
 	else
-		return false;
+		return blackKing;
 }
 
-bool Board::IsFriendlyPiece(int piece) const
+PlayerColor Board::getTurn() const {
+	return turn;
+}
+void Board::setTurn(PlayerColor turn) {
+	this->turn = turn;
+}
+
+void Board::SetKingPos(Square sq)
 {
-	if ((getTurn() == PlayerColor::WHITE && piece > 0)
-		|| (getTurn() == PlayerColor::BLACK && piece < 0))
-		return true;
-	else
-		return false;
-}
-
-bool Board::IsEnemyPiece(Square sq) const
-{
-	int piece = getPieceOnSquare(sq);
-	PlayerColor turn = getTurn();
-	if (turn == PlayerColor::WHITE &&  piece < 0
-		|| turn == PlayerColor::BLACK && piece > 0)
-		return true;
-	else
-		return false;
-}
-
-bool Board::IsFriendlyPiece(Square square) const
-{
-	int piece = getPieceOnSquare(square);
-	return IsFriendlyPiece(piece);
-}
-
-void Board::MovePieceKill(Square from, Square to) {
-
-	RemovePiece(to);
-	MovePiece(from, to);
-}
-
-void Board::MovePieceNoKill(Square from, Square to) {
-	MovePiece(from, to);
-}
-
-void Board::PromoteQueen(Square square) {
-
-	int piece = getPieceOnSquare(square);
-	RemovePiece(square);
-
-	// As long as our whiteAlivePieceIdxs list doesnt 
-	// hold the piecetype we dont need to update it here
-	if (piece > 0) {
-		SetPieceOnSquare(WHITE_QUEEN, square);
-	}
-	else if (piece < 0)
-		SetPieceOnSquare(BLACK_QUEEN, square);
-}
-
-
-void Board::makeMoveFromTo(Square from, Square to)
-{
-	int fromPiece = getPieceOnSquare(from);
-	int toPiece = getPieceOnSquare(to);
-
-	// If rook moves update casteling posablity
-	if (fromPiece == WHITE_ROOK && from.rank == 0)
-		setCastelingNotPossible(WHITE_SHORT);
-
-	else if (fromPiece == WHITE_ROOK && from.file == 7)
-		setCastelingNotPossible(WHITE_LONG);
-
-	else if (fromPiece == BLACK_ROOK && from.file == 0)
-		setCastelingNotPossible(BLACK_SHORT);
-
-	else if (fromPiece == BLACK_ROOK && from.file == 7)
-		setCastelingNotPossible(BLACK_LONG);
-
-	// king move
-	else if (abs(fromPiece) == KING)
+	if (turn == PlayerColor::WHITE)
 	{
-		// Check if a casteling move and move the rook
-		if (from.file == 4 && POV(from.rank) == 0 && POV(to.rank) == 0) {
-			Square rookFrom = from;
-			Square rookTo = to;
-			if (to.file == 2) { // long
-				rookFrom.file = 0;
-				rookTo.file = 3;
-				MovePiece(rookFrom, rookTo);
-			}
-			else if (to.file == 6) { // short
-				rookFrom.file = 7;
-				rookTo.file = 5;
-				MovePiece(rookFrom, rookTo);
-			}
-			
-		}
-
-		// if king move then casteling not possible in future
-		if (getTurn() == PlayerColor::WHITE)
-		{
-			setCastelingNotPossible(WHITE_SHORT);
-			setCastelingNotPossible(WHITE_LONG);
-		}
-		else if (getTurn() == PlayerColor::BLACK)
-		{
-			setCastelingNotPossible(BLACK_SHORT);
-			setCastelingNotPossible(BLACK_LONG);
-		}
-		SetKingPos(to);
+		whiteKing = sq;
 	}
-	if (!IsEmptySquare(to))
-		MovePieceKill(from, to);
 	else
-		MovePiece(from, to);
-
-	//pawn promotion
-	if (abs(fromPiece) == PAWN && (to.rank == 0 || to.rank == 7))
 	{
-		PromoteQueen(to);
+		blackKing = sq;
+	}
+}
+
+int Board::POV(int rankNumber) const {
+	if (turn == PlayerColor::BLACK)
+		return rankNumber;
+	else
+		return 7 - rankNumber;
+}
+
+
+int Board::getPieceOnSquare(Square sq) const
+{
+	if (sq.file > 7 || sq.rank > 7 || sq.file < 0 || sq.rank < 0) {
+		(void)fprintf(stderr, "iligal square : \n");
+		return 0;
+	}
+	return board[sq.rank][sq.file];
+}
+
+int Board::getPieceOnSquare(int sqY, int sqX) const {
+	return board[sqY][sqX];
+}
+
+void Board::SetPieceOnSquare(int piece, Square sq)
+{
+	if (sq.rank >= 0 && sq.rank < 8 && sq.file >= 0 && sq.file < 8) {
+		board[sq.rank][sq.file] = piece;
+	}
+	else
+		cout << "SetPieceOnSquare(): Out of bounds" << endl;
+}
+
+void Board::SetPieceOnSquare(int piece, int sqY, int sqX)
+{
+	board[sqY][sqX] = piece;
+}
+
+int Board::getPieceOnWhiteOutedSquare(int squareNr) const
+{
+	if (squareNr < outedWhite.size())
+		return outedWhite[squareNr];
+	else
+		return 0;
+}
+
+int Board::getPieceOnBlackOutedSquare(int square) const
+{
+	if (square < outedBlack.size())
+		return outedBlack[square];
+	else
+		return 0;
+}
+
+
+bool Board::getCastelingPossible(casteling castelingType) const {
+	switch (castelingType) {
+	case BLACK_LONG:
+		return castelingPossible.blackLong;
+	case BLACK_SHORT:
+		return castelingPossible.blackShort;
+	case WHITE_SHORT:
+		return castelingPossible.whiteShort;
+	case WHITE_LONG:
+		return castelingPossible.whiteLong;
+	default:
+		return false;
+	}
+}
+
+void Board::setCastelingRight(casteling castelingType, bool possible) {
+	switch (castelingType) {
+	case BLACK_LONG:
+		 castelingPossible.blackLong = false;
+		 break;
+	case BLACK_SHORT:
+		castelingPossible.blackShort = false;
+		break;
+	case WHITE_SHORT:
+		castelingPossible.whiteShort = false;
+		break;
+	case WHITE_LONG:
+		castelingPossible.whiteLong = false;
+		break;
+	default:
+		printf("setCastelingNotPossible: illegal argument");
+		break;
 	}
 }
 

@@ -1,13 +1,13 @@
 #ifndef _player_h
 #define _player_h
 #include "SharedTypes.h"
-#include "source/board/Board.h"
+#include "source/board/position.h"
 #include "source/RulesManager.h"
 #include "source/engine/evaluator.h"
 #include "source/engine/moveGenerator.h"
 class Player {
 	public:
-		Player(Board *pBoard, PlayerColor color);
+		Player(Position *pPosition, PlayerColor color);
 		~Player();
 		virtual bool stepTurn() = 0; // abstract method
 		virtual void init() = 0;
@@ -22,7 +22,7 @@ class Player {
 	private:
 		vector<Square> kingAttackers;
 	protected:
-		Board* gameBoard;
+		Position* gamePosition;
 		PlayerColor color;
 		list<Move> possibleMoves;
 

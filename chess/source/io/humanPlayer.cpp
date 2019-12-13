@@ -2,7 +2,7 @@
 
 //HumanPlayer::HumanPlayer() {};
 
-HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard) : Player(pBoard, color) 
+HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Position* pPosition) : Player(pPosition, color) 
  {
 	SetColor(color);
 
@@ -17,7 +17,7 @@ HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Board* pBoard) : Play
 }
 
 void HumanPlayer::init() {
-	tempBoard = *gameBoard;
+	tempPosition = *gamePosition;
 	turnDone = false;
 }
 
@@ -41,7 +41,7 @@ bool HumanPlayer::stepTurn()
 			{
 				coordinatesToSquare(event.button.x, event.button.y, &squareFrom);
 
-				if (gameBoard->IsFriendlyPiece(squareFrom))
+				if (gamePosition->IsFriendlyPiece(squareFrom))
 				{
 					scene->MarkSquare(squareFrom); // Mark square with active piece
 					state = HumanPlayerState::waitSecondInput;
@@ -63,7 +63,7 @@ bool HumanPlayer::stepTurn()
 			{
 				coordinatesToSquare(event.button.x, event.button.y, &squareTo);
 
-				if (!gameBoard->IsFriendlyPiece(squareTo))
+				if (!gamePosition->IsFriendlyPiece(squareTo))
 				{
 					scene->MarkSquare(squareTo);
 					state = HumanPlayerState::executeMove;
@@ -80,15 +80,15 @@ bool HumanPlayer::stepTurn()
 	//------------------------------------------------
 	else if (state == HumanPlayerState::executeMove)
 	{
-		if (RulesManager::IsLegalMove(gameBoard, squareFrom, squareTo))
+		if (RulesManager::IsLegalMove(gamePosition, squareFrom, squareTo))
 		{
 			vector<Square> attackingSquares;
 			// Make move on temporary  board and se if king becomes or remaines threatened
-			tempBoard = *gameBoard;
-			tempBoard.makeMoveFromTo(squareFrom, squareTo);
-			if (!RulesManager::KingIsChecked(&tempBoard, &attackingSquares, color))
+			tempPosition = *gamePosition;
+			tempPosition.makeMoveFromTo(squareFrom, squareTo);
+			if (!RulesManager::KingIsChecked(&tempPosition, &attackingSquares, color))
 			{
-				*gameBoard = tempBoard;
+				*gamePosition = tempPosition;
 
 				scene->CreateScene();
 				scene->MarkSquare(squareFrom);
@@ -106,7 +106,7 @@ bool HumanPlayer::stepTurn()
 			{
 				// If king is checked, take back temporary move and mark the squares
 				// from which the attack comes
-				tempBoard = *gameBoard;
+				tempPosition = *gamePosition;
 				for (vector<Square>::iterator it = attackingSquares.begin(); it != attackingSquares.end(); ++it) {
 					scene->MarkSquare(*it);
 				}

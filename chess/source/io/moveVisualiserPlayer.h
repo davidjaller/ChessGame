@@ -11,12 +11,12 @@
 
 class MoveVisualizerPlayer : public Player {
 public:
-	MoveVisualizerPlayer(PlayerColor color, Scene* pScene, Board* pBoard);
+	MoveVisualizerPlayer(PlayerColor color, Scene* pScene, Position* pPosition);
 	void init();
 	bool stepTurn();
 private:
 
-	Board tempBoard; 
+	Position tempPosition; 
 	Scene* myScene;
 	int state;
 

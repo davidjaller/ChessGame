@@ -17,9 +17,9 @@
 // 
 ///////////////////////////////////////////////////////////////////////////////
 
-Scene::Scene(Board *pBoard)
+Scene::Scene(Position *pPosition)
 {
-	gameBoard = pBoard;
+	gamePosition = pPosition;
 	InitGraph ();
 }
 
@@ -166,11 +166,11 @@ bool Scene::DrawPieces()
 	for (int i = 0; i < 2; i++) {
 		Square sq;
 
-		set<int>::iterator it = gameBoard->getAlivePieceSet(white_black[i])->begin();
+		set<int>::iterator it = gamePosition->getAlivePieceSet(white_black[i])->begin();
 
-		for (; it != gameBoard->getAlivePieceSet(white_black[i])->end(); ++it) {
-			sq = Board::IndexToSquare(*it);
-			int piece = gameBoard->getPieceOnSquare(sq);
+		for (; it != gamePosition->getAlivePieceSet(white_black[i])->end(); ++it) {
+			sq = it->getSquare();
+			int piece = it->getType();
 			file = x1 + SQUARE_SIZE * sq.file;
 			rank = y1 + SQUARE_SIZE * sq.rank;
 			PutPiece(file, rank, piece);
@@ -179,7 +179,7 @@ bool Scene::DrawPieces()
 	}
 
 	int i = 0;
-	while (piece = gameBoard->getPieceOnWhiteOutedSquare(i))
+	while (piece = gamePosition->getPieceOnWhiteOutedSquare(i))
 	{
 		if (i >= 8)
 		{
@@ -196,7 +196,7 @@ bool Scene::DrawPieces()
 		i++;
 	}
 	i = 0;
-	while(piece = gameBoard->getPieceOnBlackOutedSquare(i))
+	while(piece = gamePosition->getPieceOnBlackOutedSquare(i))
 	{
 		
 		if (i >= 8)

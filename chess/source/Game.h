@@ -13,7 +13,7 @@
 #include <time.h>
 #include <vector>
 
-#include "source/board/Board.h"
+#include "source/board/Position.h"
 #include <source/RulesManager.h>
 #include "source/SharedTypes.h"
 #include "source/io/humanPlayer.h"
@@ -29,14 +29,14 @@ class Game
 {
 public:
 
-	Game (Scene *pScene, Board *pBoard);
+	Game (Scene *pScene, Position *pPosition);
 	~Game();
 	bool StepGame();
 	void NewGame();
 
 private:
 	Scene *myScene;
-	Board *gameBoard;
+	Position *gamePosition;
 	int player;
 	vector<unique_ptr<Player>> players;
 };

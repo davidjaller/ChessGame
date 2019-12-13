@@ -68,3 +68,34 @@ int SquareToIndex(Square sq) {
 	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
 	return sq.rank * 8 + sq.file;
 }
+
+
+Square IndexToSquare(int index) {
+	// 64 squares, index row by row from top left
+	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
+	Square square;
+	square.file = index % 8;
+	square.rank = index / 8;
+	return square;
+}
+
+int SquareToIndex(int sqY, int sqX) {
+	// 64 squares, index row by row from top left
+	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
+	return sqY * 8 + sqX;
+}
+
+void bitBoardToSquares(vector<Square>* square_v, bitBoard_t bitBoard) {
+	int i = 0;
+	while (bitBoard != 0) {
+		if ((bitBoard & 1) == 1) {
+			square_v->push_back(IndexToSquare(i));
+		}
+		bitBoard >> 1;
+		i++;
+	}
+}
+
+bitBoard_t squareToBitBoard(Square sq) {
+	return bitBoard_t(1) << SquareToIndex(sq);
+}

@@ -44,12 +44,12 @@
 //
 //}
 //
-//Move MinMax::search(Board* gameBoard, PlayerColor player) {
+//Move MinMax::search(Board* gamePosition, PlayerColor player) {
 //	level = 0;
 //	maximizingPlayer = player;
 //	nodeCount = 0;
 //
 //	// consider starting this as a thread
-//	Board board = *gameBoard; //Needed?
+//	Board board = *gamePosition; //Needed?
 //	float score = minMaxRecursive(board);
 //}

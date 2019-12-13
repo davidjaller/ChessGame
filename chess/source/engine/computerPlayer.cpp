@@ -1,6 +1,6 @@
 #include "source/engine/computerPlayer.h"
 
-ComputerPlayer::ComputerPlayer(PlayerColor color, Scene* pScene,  Board* pBoard) : Player(pBoard, color) {
+ComputerPlayer::ComputerPlayer(PlayerColor color, Scene* pScene,  Position* pPosition) : Player(pPosition, color) {
 	nodeCount = 0;
 	scene = pScene;
 }
@@ -22,7 +22,7 @@ bool ComputerPlayer::stepTurn() {
 	
 
 	if (success) {
-		gameBoard->makeMoveFromTo(bestMove.from, bestMove.to);
+		gamePosition->makeMoveFromTo(bestMove.from, bestMove.to);
 		scene->CreateScene();
 
 		scene->MarkSquare(bestMove.from);
@@ -38,22 +38,22 @@ bool ComputerPlayer::stepTurn() {
 	return true;
 }
 
-float ComputerPlayer::minMaxRecursive(Board board, int level) {
+float ComputerPlayer::minMaxRecursive(Position position, int level) {
 	if (level >= MAX_SEARCH_DEPTH) {
 		// add a small random while evaluation is simple and search shallow, 
 		// so that we dont get same everytime
 		float random = (float)(rand() % 100) / 1000;
-		return Evaluator::evaluatePosition(&board, color)+random;
+		return Evaluator::evaluatePosition(&position, color)+random;
 	}
 
-	bool maximizing = board.getTurn() == color;
+	bool maximizing = position.getTurn() == color;
 
 	Square sq;
 	list<Move> moveList;
-	int nrMoves = MoveGenerator::generateAll(&board, &moveList);
+	int nrMoves = MoveGenerator::generateAll(&position, &moveList);
 	if (nrMoves == 0) { // can't not move
 		vector<Square> sqL;
-		if (RulesManager::KingIsChecked(&board, &sqL, board.getTurn())) // mate
+		if (RulesManager::KingIsChecked(&position, &sqL, position.getTurn())) // mate
 			if (maximizing)
 				return std::numeric_limits<float>::min();
 			else
@@ -68,12 +68,12 @@ float ComputerPlayer::minMaxRecursive(Board board, int level) {
 	float maxScore = -std::numeric_limits<float>::max();
 	float minScore = std::numeric_limits<float>::max();
 	for (list<Move>::iterator it = moveList.begin(); it != moveList.end(); it++) {
-		Board newBoard = board;
+		Position newBoard = position;
 		Move move = *it;
 		
 		newBoard.makeMoveFromTo(move.from, move.to);
 		// is in check? (or generator will take care of that?)
-		newBoard.setTurn(getOpposite(board.getTurn()));
+		newBoard.setTurn(getOpposite(position.getTurn()));
 		float score = minMaxRecursive(newBoard, level + 1);
 		if (level == 0) {
 			printMoveScore(move, score);
@@ -105,7 +105,7 @@ bool ComputerPlayer::findBestMove() {
 	bool success = false;
 
 	// consider starting this as a thread
-	float score = minMaxRecursive(*gameBoard, level);
+	float score = minMaxRecursive(*gamePosition, level);
 	if (nodeCount > 0) { //root node not counted
 		success = true;
 	}

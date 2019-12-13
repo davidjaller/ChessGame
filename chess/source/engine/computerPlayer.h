@@ -16,11 +16,11 @@
 class ComputerPlayer : public Player {
 
 public:
-	ComputerPlayer(PlayerColor color, Scene* pScene, Board* pBoard);
+	ComputerPlayer(PlayerColor color, Scene* pScene, Position* pPosition);
 	bool stepTurn();
 	void init();
 private:
-	float minMaxRecursive(Board board, int level);
+	float minMaxRecursive(Position position, int level);
 	bool findBestMove();
 	int nodeCount;
 	Move bestMove;

@@ -1,19 +1,64 @@
-#ifndef _board_h
-#define _board_h
-#include "source/board/FundamentalBoard.h"
-class FundamentalBoard; // forward declaration
+// --------------------------------------------------------------------------------
+//									 Board
+// --------------------------------------------------------------------------------
 
-class Board : public FundamentalBoard {
+#ifndef _BOARD_H
+#define _BOARD_H
+
+// ------ Includes -----
+
+
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <array>
+#include <set>
+#include "source/SharedTypes.h"
+#include "source/board/piece.h"
+
+using namespace std;
+
+class Board
+{
 public:
+
 	Board();
-	void makeMoveFromTo(Square from, Square to);
-	bool IsEmptySquare(Square sq) const;
-	bool IsFriendlyPiece(int piece) const;
-	bool IsFriendlyPiece(Square sq) const;
-	bool IsEnemyPiece(Square sq) const;
-	void PromoteQueen(Square square);
-	void MovePieceKill(Square from, Square to);
-	void MovePieceNoKill(Square from, Square to);
+	~Board();
+
+	int getPieceOnSquare(Square sq) const;
+	int getPieceOnSquare(int sqY, int sqX) const;
+
+	int getPieceOnWhiteOutedSquare(int square) const;
+	int getPieceOnBlackOutedSquare(int square) const;
+
+	Square GetKingPos(PlayerColor pl) const;
+
+	PlayerColor getTurn() const;
+	void setTurn(PlayerColor turn);
+
+	bool getCastelingPossible(casteling castelingType) const;
+	void setCastelingRight(casteling castelingType, bool possible);
+
+	int POV(int rankNumber) const;
+	vector<int> outedWhite;
+	vector<int> outedBlack;
+
+	void SetKingPos(Square sq);
+	void SetPieceOnSquare(int piece, Square sq);
+	void SetPieceOnSquare(int piece, int rank, int file);
+
+protected:
+
+private:
+
+	Square whiteKing;
+	Square blackKing;
+
+	array<array<int, 8>, 8> board;  // matrix representation of pieces on the board
+
+	PlayerColor turn;
+
+	BoolStruct castelingPossible;
 };
 
-#endif // !_fundamental_board_h
+#endif // _BOARD_

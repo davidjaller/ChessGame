@@ -12,7 +12,7 @@
 //public:
 //	MinMax(PlayerColor player);
 //	
-//	Move search(Board* gameBoard, PlayerColor color);
+//	Move search(Board* gamePosition, PlayerColor color);
 //	int getNumberOfNodesSearched();
 //private:
 //	void initSearch();

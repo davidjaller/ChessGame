@@ -8,7 +8,6 @@
 #include <map>
 using namespace std;
 using pieces_t = map<int, Piece>;
-using iterator_t = pieces_t::iterator;
 using const_iterator_t = pieces_t::const_iterator;
 
 class PieceList {
@@ -19,8 +18,8 @@ public:
 	void removePiece(Square square);
 	void clearList();
 	void add(Piece piece, Square sq);
-	const_iterator_t begin();
-	const_iterator_t end();
+	const_iterator_t begin() const;
+	const_iterator_t end() const;
 	int getPieceType(Square square);
 	void updateMovement(Move move, const Board* board, PlayerColor movingSide);
 	bitBoard_t getAttackingBB();
@@ -28,10 +27,7 @@ public:
 private:
 	pieces_t pieces; 
 	bitBoard_t allCanMove;
-	ourColor;
-	
-
-
+	PlayerColor ownColor;
 
 };
 

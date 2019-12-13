@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(Board* pBoard, PlayerColor color) {
-	gameBoard = pBoard;
+Player::Player(Position* pPosition, PlayerColor color) {
+	gamePosition = pPosition;
 	SetColor(color);
 }
 
@@ -19,14 +19,14 @@ bool Player::isChecked() {
 	if (!kingAttackers.empty())
 		kingAttackers.clear();
 	
-	bool checked = RulesManager::KingIsChecked(gameBoard, &kingAttackers, color);
+	bool checked = RulesManager::KingIsChecked(gamePosition, &kingAttackers, color);
 
 	return checked;
 }
 
 void Player::generateMoves(){
 	resetMoves();
-	MoveGenerator::generateAll(gameBoard, &possibleMoves);
+	MoveGenerator::generateAll(gamePosition, &possibleMoves);
 }
 
 void Player::resetMoves() {
@@ -35,6 +35,6 @@ void Player::resetMoves() {
 
 bool Player::canMove() {
 	resetMoves();
-	return MoveGenerator::generateAll(gameBoard, &possibleMoves) > 0;
+	return MoveGenerator::generateAll(gamePosition, &possibleMoves) > 0;
 }
 

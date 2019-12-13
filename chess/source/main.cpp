@@ -10,6 +10,8 @@ Author: David Jaller
 #include <windows.h>
 #endif
 
+#define DEBUG_MODE
+
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
@@ -37,13 +39,14 @@ int IsKeyDown (int pKey)
 
 int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-
+#ifdef DEBUG_MODE
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
+#endif
 	
-	Board board = Board(); 
-	Scene scene(&board);
-	Game game(&scene, &board);
+	Position position = Position(); 
+	Scene scene(&position);
+	Game game(&scene, &position);
 
 	scene.CreateScene();
 	scene.UpdateScreen();

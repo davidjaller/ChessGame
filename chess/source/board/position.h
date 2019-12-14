@@ -22,6 +22,8 @@ public:
 	void MovePieceNoKill(Square from, Square to);
 
 	Square getKingPos(PlayerColor kingColor) const;
+	bool getCastelingPossible(casteling castelingType) const;
+	Piece* getPieceOnSquare(Square square, PlayerColor color) const;
 
 	const_iterator_t piecesBegin(PlayerColor color) const;
 	const_iterator_t piecesEnd(PlayerColor color) const;
@@ -33,17 +35,18 @@ public:
 	void RemovePiece(Square toSq);
 	PlayerColor getTurn() const;
 
-	static bool SquareIsAttacked(const Position* position, Square square, vector<Square>* attackingSquares,
+	bool SquareIsAttacked(Square square, vector<Square>* attackingSquares,
 		PlayerColor attackingColor);
-	static bool SquareIsAttacked(const Position* position, Square square, PlayerColor attackingColor);
-	static bool KingIsChecked(const Position* position, vector<Square>* attackingSquares, PlayerColor kingColor);
+	bool SquareIsAttacked(Square square, PlayerColor attackingColor);
+	bool KingIsChecked(vector<Square>* attackingSquares, PlayerColor kingColor) const;
+
+	const Board* getBoard();
 
 private:
 	Board board;
 	PieceList whiteAlivePieces;
 	PieceList blackAlivePieces;
-	// 64 squares, index row by row from top left
-	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
+
 };
 
-#endif // !_fundamental_board_h
+#endif 

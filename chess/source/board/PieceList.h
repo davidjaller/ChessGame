@@ -22,11 +22,14 @@ public:
 	const_iterator_t end() const;
 	int getPieceType(Square square);
 	void updateMovement(Move move, const Board* board, PlayerColor movingSide);
-	bitBoard_t getAttackingBB();
+	bitBoard_t getAttackingBB() const;
+	bitBoard_t getOccupiesBB() const;
+	 Piece* getPieceOnSquare(Square square) const;
 
 private:
 	pieces_t pieces; 
-	bitBoard_t allCanMove;
+	bitBoard_t attackingBB;
+	bitBoard_t occupiesBB;
 	PlayerColor ownColor;
 
 };

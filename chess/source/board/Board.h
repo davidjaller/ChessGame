@@ -27,6 +27,7 @@ public:
 
 	int getPieceOnSquare(Square sq) const;
 	int getPieceOnSquare(int sqY, int sqX) const;
+	bool IsEmptySquare(Square sq) const
 
 	int getPieceOnWhiteOutedSquare(int square) const;
 	int getPieceOnBlackOutedSquare(int square) const;

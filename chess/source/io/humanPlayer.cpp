@@ -80,13 +80,13 @@ bool HumanPlayer::stepTurn()
 	//------------------------------------------------
 	else if (state == HumanPlayerState::executeMove)
 	{
-		if (RulesManager::IsLegalMove(gamePosition, squareFrom, squareTo))
+		if (RulesManager::IsLegalMove(gamePosition->getBoard(), squareFrom, squareTo))
 		{
 			vector<Square> attackingSquares;
 			// Make move on temporary  board and se if king becomes or remaines threatened
 			tempPosition = *gamePosition;
 			tempPosition.makeMoveFromTo(squareFrom, squareTo);
-			if (!RulesManager::KingIsChecked(&tempPosition, &attackingSquares, color))
+			if (!RulesManager::KingIsChecked(tempPosition.getBoard(), &attackingSquares, color))
 			{
 				*gamePosition = tempPosition;
 

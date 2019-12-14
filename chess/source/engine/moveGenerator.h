@@ -12,8 +12,15 @@ class MoveGenerator {
 public:
 	static int generate(const Position* position, Square from, int Piece, list<Move> *moveList);
 
-	static int generateAll(const Position* position, list<Move>* moveList);
+	static int generateMoves(const Position* position, list<Move>* moveList, bool generateCaptures);
 private:
+	static int bitBoardToMoves(bitBoard_t movementBB, list<Move>* moveList, Square fromSquare, bool kill);
+	static bitBoard_t getCastellingBB(const Position* position, PlayerColor turn);
+	static bitBoard_t getPinMask(const Position* position, Square from, Square kingSquare);
+	static bitBoard_t getKingShadowsBB(const Position* positon, list<Square> attackingSquares);
+	static bitBoard_t getBlockAttackerBB(list<Square> attackingSquares);
+	static bitBoard_t getCaptureAttackerBB(list<Square> attackingSquares);
+
 	static int generateForPawn(const Position* position, Square from, int piece, list<Move> *moveList);
 
 	static int generateForBishop(const Position* position, Square from, int piece, list<Move> *moveList);
@@ -32,7 +39,7 @@ private:
 	
 	static bool movingIntoCheck(const Position* position, Move move);
 
-	static bitBoard_t getPinMask(const Position* position, Square from, Square kingSquare);
+
 
 };
 

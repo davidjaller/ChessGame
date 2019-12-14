@@ -80,6 +80,14 @@ int Board::POV(int rankNumber) const {
 		return 7 - rankNumber;
 }
 
+bool Board::IsEmptySquare(Square sq) const
+{
+	if (getPieceOnSquare(sq) == 0)
+		return true;
+	else
+		return false;
+}
+
 
 int Board::getPieceOnSquare(Square sq) const
 {

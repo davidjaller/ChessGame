@@ -18,6 +18,7 @@ string moveToStr(Move move);
 void printMoveScore(Move move, float score);
 int SquareToIndex(Square sq);
 Square IndexToSquare(int i);
+bool alignedSquares(Square square1, Square square2, Square* direction);
 
 bool isSliderPiece(int piece);
 #endif

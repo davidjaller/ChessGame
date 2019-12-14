@@ -50,19 +50,17 @@ float ComputerPlayer::minMaxRecursive(Position position, int level) {
 
 	Square sq;
 	list<Move> moveList;
-	int nrMoves = MoveGenerator::generateAll(&position, &moveList);
+	int nrMoves = MoveGenerator::generateMoves(&position, &moveList, true); //captures first
+	nrMoves += MoveGenerator::generateMoves(&position, &moveList, false); //pushes after (good for pruning)
 	if (nrMoves == 0) { // can't not move
-		vector<Square> sqL;
-		if (RulesManager::KingIsChecked(&position, &sqL, position.getTurn())) // mate
+		vector<Square> square_v;
+		if (position.KingIsChecked(&square_v, position.getTurn())) // mate
 			if (maximizing)
 				return std::numeric_limits<float>::min();
 			else
 				return std::numeric_limits<float>::max();
 		else { // draw
-			if (maximizing)
-				return std::numeric_limits<float>::min()/2;
-			else
-				return std::numeric_limits<float>::max()/2;
+				return 0; // this way we are happy with draw compared to a slight disadvantage, consider a threashold
 		}
 	}
 	float maxScore = -std::numeric_limits<float>::max();

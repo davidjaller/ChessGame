@@ -39,12 +39,20 @@ void Position::InitPosition(array<array<int, 8>, 8> initMatrix, PlayerColor turn
 	board.setTurn(turn);
 }
 
+const Board* Position::getBoard() {
+	return board;
+}
+
 PlayerColor Position::getTurn() const{
 	return board.getTurn();
 }
 
 Square Position::getKingPos(PlayerColor kingColor) const{
 	return boad.getKingPos(kingColor);
+}
+
+bool Position::getCastelingPossible(casteling castelingType) const {
+	return boar.getCastelingPosible(castelingType);
 }
 
 bitBoard_t Position::getOccupiedSquaresBB(PlayerColor color) const{
@@ -152,14 +160,14 @@ void Position::PromoteQueen(Square square) {
 }
 
 const_iterator_t Position::piecesBegin(PlayerColor color) const{
-	if (color == PLayerColor::WHITE)
+	if (color == PlayerColor::WHITE)
 		return whiteAlivePieces.begin();
 	else
 		return blackAlivePieces.begin();
 }
 
 const_iterator_t Position::piecesEnd(PlayerColor color) const{
-	if (color == PLayerColor::WHITE)
+	if (color == PlayerColor::WHITE)
 		return whiteAlivePieces.end();
 	else
 		return blackAlivePieces.end();
@@ -230,3 +238,35 @@ void Position::makeMoveFromTo(Square from, Square to)
 	}
 }
 
+bool Position::KingIsChecked(vector<Square>* attackingSquares, PlayerColor kingColor) const {
+	return SquareIsAttacked(getKingPos(kingColor), attackingSquares, getOpposite(kingColor));
+}
+
+Piece* Position::getPieceOnSquare(Square square, PlayerColor color) const {
+	if (color == PlayerColor::WHITE) 
+		return whiteAlivePieces.getPieceOnSquare(square);
+	else
+		return blackAlivePieces.getPieceOnSquare(square);
+}
+
+bool Position::SquareIsAttacked(Square square, vector<Square>* attackingSquares, PlayerColor attackingColor)
+{
+
+	attackingSquares->clear();
+	Square sq;
+
+	bitBoard_t attackersBB = getAttackedSquaresBB(attackingColor) & squareToBitBoard(square);
+	if (attackersBB != 0) {
+		bitBoardToSquares(attackingSquares, attackersBB);
+		return true;
+	}
+	else
+		return false;
+
+}
+
+// Overloaded method without output pointer
+bool Position::SquareIsAttacked( Square square, PlayerColor attackingColor) {
+
+	return position->getAttackedSquaresBB(attackingColor) & squareToBitBoard(square);
+}

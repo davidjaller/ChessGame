@@ -48,6 +48,8 @@ void Piece::updateMovement(const Board* board) {
 	canKillOnBB = 0;
 	pawnAttacksBB = 0;
 
+	// this is pseudo legal move generation, moving in to check and if casteling legal is checked later 
+
 	switch (pieceType)
 	{
 	case PAWN:	 generateForPawn(board);
@@ -130,16 +132,16 @@ void Piece::generateForPawn(const Board* board) {
 	if (to.rank < 8 && to.rank >= 0) {
 		if (board->IsEmptySquare(to)) 
 			canMoveToBB |= 1 << SquareToIndex(to);
+			// two
+			to.rank = ownSquare.rank + push2;
+			if (to.rank < 8 && to.rank >= 0) {
+				if (board->IsEmptySquare(to))
+					canMoveToBB |= 1 << SquareToIndex(to);
+				else
+					blockedOnBB |= 1 << SquareToIndex(to);
+			}
 		else
 			blockedOnBB |= 1 << SquareToIndex(to);
-		// two
-		to.rank = ownSquare.rank + push2;
-		if (to.rank < 8 && to.rank >= 0){
-			if(board->IsEmptySquare(to)) 
-				canMoveToBB |= 1 << SquareToIndex(to);
-			else
-				blockedOnBB |= 1 << SquareToIndex(to);
-		}
 	}
 	// kill
 	to.rank = ownSquare.rank + push1;
@@ -187,18 +189,16 @@ void Piece::generateForKing(const Board* board) {
 	vector<array <int, 2>> directions = { { {-1,0}, {-1, -1}, {0, -1}, {1, -1} ,{1, 0}, {1, 1}, {0, 1}, {-1, 1} } };
 	Square to;
 
-	//Casteling move
+	//Casteling move, we check later if this is legal
 	to.rank = ownSquare.rank;
 	// Long
 	to.file = 2;
-	if (RulesManager::IsLegalCasteling(board, ownSquare, to)) {
-		canMoveToBB |= 1 << SquareToIndex(to);
-	}
+	canMoveToBB |= 1 << SquareToIndex(to);
+	
 	// Short
 	to.file = 6;
-	if (RulesManager::IsLegalCasteling(board, ownSquare, to)) {
-		canMoveToBB |= 1 << SquareToIndex(to);
-	}
+	canMoveToBB |= 1 << SquareToIndex(to);
+	
 
 	// Normal move
 	for (int i = 0; i < directions.size(); i++) {

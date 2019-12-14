@@ -1,4 +1,25 @@
 #include "moveGenerator.h"
+////////////////////////
+// constants:
+////////////////////////
+
+const bitBoard_t WHITE_SHORT_NO_OCC_BB = squareToBitBoard(Square(7, 5)) | squareToBitBoard(Square(7, 6));
+const bitBoard_t WHITE_SHORT_NO_ATT_BB = squareToBitBoard(Square(7, 4)) | squareToBitBoard(Square(7, 5)) | squareToBitBoard(Square(7, 6));
+const bitBoard_t WHITE_SHORT_BB = squareToBitBoard(Square(7, 6));
+
+const bitBoard_t WHITE_LONG_NO_OCC_BB = squareToBitBoard(Square(7, 1)) | squareToBitBoard(Square(7, 2)) | squareToBitBoard(Square(7, 3));
+const bitBoard_t WHITE_LONG_NO_ATT_BB = squareToBitBoard(Square(7, 2)) | squareToBitBoard(Square(7, 3)) | squareToBitBoard(Square(7, 4));
+const bitBoard_t WHITE_LONG_BB = squareToBitBoard(Square(7, 2));
+
+const bitBoard_t BLACK_SHORT_NO_OCC_BB = squareToBitBoard(Square(0, 5)) | squareToBitBoard(Square(7, 6));
+const bitBoard_t BLACK_SHORT_NO_ATT_BB = squareToBitBoard(Square(0, 4)) | squareToBitBoard(Square(7, 5)) | squareToBitBoard(Square(7, 6));
+const bitBoard_t BLACK_SHORT_BB = squareToBitBoard(Square(0, 6));
+
+const bitBoard_t BLACK_LONG_NO_OCC_BB = squareToBitBoard(Square(0, 1)) | squareToBitBoard(Square(0, 2)) | squareToBitBoard(Square(0, 3));   //0x0B  ...001110 
+const bitBoard_t BLACK_LONG_NO_ATT_BB = squareToBitBoard(Square(0, 2)) | squareToBitBoard(Square(0, 3)) | squareToBitBoard(Square(0, 4)); //0x1C  ...011100
+const bitBoard_t BLACK_LONG_BB = squareToBitBoard(Square(0, 2));
+
+
 
 //int MoveGenerator::generate(const Position* position, Square from, int piece, list<Move> *moveList) {
 //
@@ -20,114 +41,251 @@
 //	return 0;
 //}
 //
-int MoveGenerator::generateAll(const Position* position, list<Move>* moveList) {
+int MoveGenerator::generateMoves(const Position* position, list<Move>* moveList, bool generateCaptures) {
+
+	// Here we go from pseudo legal move bitBoards to legal Move structs and append them to moveList 
+	// That is we now consider also making sure we are not in check after making the move
+	// If moveList is empty, then 
+
+	bitBoard_t movementBB;
 
 	PlayerColor turn = position->getTurn();
 	vector<Square> attackingSquares;
-	if(position->KingIsChecked(position, &attackingSquares, turn)){
-		return generateGetOutOfAttack(position, position->getKingPos(turn), attackingSquares, turn, moveList);
+	bool inCheck = position->KingIsChecked(&attackingSquares, turn);
+	if (attackingSquares.size() > 1) {
+		// if two or more attackers, only moving king can help us, no need to loop trough all pieces
+		Piece* king = position->getPieceOnSquare(position->getKingPos, turn);
+		if (generateCaptures) 
+			movementBB = king->canKillOnBB;
+		else
+			movementBB = king->canMoveToBB;
+		movementBB &= position->getAttackedSquaresBB(getOpposite(turn)) & ~getKingShadowsBB();
+		return bitBoardToMoves(movementBB, moveList, king->ownSquare, generateCaptures);
 	}
 
-	Square sq;
 	int count = 0;
-	
-	
-	//bitboard_t kingMask = getKingMask(castelingRights, getAttacksBB(getOposite(turn)));
-
 
 	for (const_iterator_t it = position->piecesBegin(turn); it != position->piecesEnd(turn); ++it) {
 		Piece piece = it->second; // consider eliminating this copy
-		bitBoard_t movement = piece.canMoveToBB;
+
+		if (generateCaptures) // this is so that we can search captures first
+			movementBB = piece.canKillOnBB;
+		else
+			movementBB = piece.canMoveToBB;
+
 		if (piece.getType() == KING) {
-			//movement &= kingMask;
+			if (inCheck) {
+				// we dont need condider casteling. we do need to consider the kings shadow from an attacking slider. smart solution?
+				movementBB &= position->getAttackedSquaresBB(getOpposite(turn)) & ~getKingShadowsBB();
+			}
+			else {
+				movementBB &= position->getAttackedSquaresBB(getOpposite(turn)); // cant move to attacked square
+				movementBB |= getCastellingBB(position, turn);
+			}
 		}
 		else {
-			bitBoard_t pinMask = getPinMask(position, piece.ownSquare, position->getKingPos(turn));
-			// movement &= pinMask;
+			if (inCheck) {
+				// we need a blockAttackerMask and a captureAttackerMask
+				movementBB &= getBlockAttackerMask(attackingSquares) | getCaptureAttackerMask(attackingSquares);
+			}
+			else {
+				bitBoard_t pinMask = getPinMask(position, piece.ownSquare, position->getKingPos(turn));
+				movementBB &= pinMask;
+			}
 		}
-
+		count += bitBoardToMoves(movementBB, moveList, piece.ownSquare, generateCaptures);
 	}
 	return count;
 }
 
 
-
-
-
-int MoveGenerator::generateGetOutOfAttack(const Position* position, Square attackedSquare, vector<Square> attackingSquares, list<Move>* moveList) {
-	// Comonly used for when we are being checked, in order not to have to go trough all pieces
-	// moves just to see that we are still checked (could also be usefull for queen attacks)
-	return 0;
-}
-
-
-bool MoveGenerator::movingIntoCheck(const Position* position, Move move) {
-	// here it would be nice if we knew allready which pieces was pinned to king and can not be moved,
-	// the possibly using bitboard mask to filter out moves instead of calling this each time
-	Position tempPosition = *position;
-	tempPosition.makeMoveFromTo(move.from, move.to);
-	vector<Square> sqrs;
-	return RulesManager::KingIsChecked(&tempPosition, &sqrs, position->getTurn());
-}
-
-bitBoard_t MoveGenerator::getPinMask(const Position* position, Square thisSquare, Square kingSquare) {
-
-
-	int rankDist = kingSquare.rank - thisSquare.rank;
-	int fileDist = kingSquare.rank - thisSquare.rank;
-	bitBoard_t pinMask = 0;
-	bool isPinned = false;
-
-	// Are we on same ray as king?
-	if (fileDist == 0 || rankDist == 0 || fileDist == rankDist) {
-
-		Square direction(0,0); //positive towards king
-		if (rankDist > 0)
-			direction.rank = 1;
-		else if (rankDist < 0)
-			direction.rank = -1;
-		if (fileDist > 0)
-			direction.file = 1;
-		else if (fileDist < 0)
-			direction.file = -1;
-
-		// First check squares between king and our piece, if anyone there no pinn
-		Square sq = thisSquare;
-		while ((sq+=direction)!=kingSquare && insideBoard(sq)) {
-			//Step towards king along ray 
-			if (!position->IsEmptySquare(sq))
-				return 0xFFFFFFFF;
-			else
-				pinMask |= 1 << SquareToIndex(sq);
+int MoveGenerator::bitBoardToMoves(bitBoard_t movementBB, list<Move>* moveList, Square fromSquare, bool kill) {
+	int i = 0;
+	int count = 0;
+	while (movementBB != 0) {
+		if ((movementBB & 1) == 1) {
+			Move move;
+			move.from = fromSquare;
+			move.to = IndexToSquare(i);
+			move.kill = kill;
+			moveList->push_back(move);
 		}
-		
-		//If we have not returned it means we are closest to king
-		// Now move other direction to see if there is a relevant slider
-		sq = thisSquare;
-		while (insideBoard(sq-=direction)) {
+		movementBB >> 1;
+		i++;
+	}
+	return count;
+}
 
-			int pieceType = abs(position->getPieceOnSquare(sq));
+bitBoard_t MoveGenerator::getCastellingBB(const Position* position, PlayerColor turn) {
 
-			if (position->IsEmptySquare(sq))
-				pinMask |= 1 << SquareToIndex(sq);
+	bitBoard_t castellingBB = 0;
+	bitBoard_t occupiedSquares = position->getOccupiedSquaresBB(PlayerColor::WHITE) &
+		position->getOccupiedSquaresBB(PlayerColor::BLACK);
 
-			else if (position->IsEnemyPiece(sq) &&
-				( ( pieceType == ROOK && (rankDist == 0 || fileDist == 0) ) ||
-				(pieceType == BISHOP && rankDist == fileDist) ||
-				pieceType == QUEEN)) 
-			{
-				pinMask |= 1 << SquareToIndex(sq);
-				isPinned = true;
-				break;
+	if (turn == PlayerColor::WHITE) {
+		bitBoard_t attackedSquares = position->getAttackedSquaresBB(PlayerColor::BLACK);
+		if (position->getCastelingPossible(WHITE_SHORT) &&
+			(WHITE_SHORT_NO_OCC_BB & occupiedSquares == 0) &&
+			(WHITE_SHORT_NO_ATT_BB & attackedSquares == 0)) {
+			castellingBB |= WHITE_SHORT_BB;
+		}
+		if (position->getCastelingPossible(WHITE_LONG) &&
+			(WHITE_LONG_NO_OCC_BB & occupiedSquares == 0) &&
+			(WHITE_LONG_NO_ATT_BB & attackedSquares == 0)) {
+			castellingBB |= WHITE_LONG_BB;
+		}
+		else {
+			bitBoard_t attackedSquares = position->getAttackedSquaresBB(PlayerColor::WHITE);
+			if (position->getCastelingPossible(BLACK_SHORT) &&
+				(BLACK_SHORT_NO_OCC_BB & occupiedSquares == 0) &&
+				(BLACK_SHORT_NO_ATT_BB & attackedSquares == 0)) {
+				castellingBB |= BLACK_SHORT_BB;
 			}
-			else // some other piece blocking
-				break;
+			if (position->getCastelingPossible(BLACK_LONG) &&
+				(BLACK_LONG_NO_OCC_BB & occupiedSquares == 0) &&
+				(BLACK_LONG_NO_ATT_BB & attackedSquares == 0)) {
+				castellingBB |= BLACK_LONG_BB;
+			}
+
+		}
+	}
+}
+
+bitBoard_t MoveGenerator::getKingShadowsBB(const Position* position, list<Square> attackingSquares, PlayerColor turn, Square kingSquare) {
+	bitBoard_t shadowBB = 0;
+	for (list<Square>::iterator it = attackingSquares.begin(); it != attackingSquares.end(); ++it) {
+		Square attackerSq = *it;
+		Piece* piece = position->getPieceOnSquare(attackerSq, getOpposite(turn));
+		if (piece->isSlider) {
+			Square direction;
+			if (alignedSquares(attackerSq, kingSquare, &direction)) {
+				shadowBB |= squareToBitBoard(kingSquare + direction);
+			}
+		}
+	}
+}
+
+	bitBoard_t MoveGenerator::getBlockAttackerBB(list<Square> attackingSquares) {
+
+	}
+
+	bitBoard_t MoveGenerator::getCaptureAttackerBB(list<Square> attackingSquares) {
+		bitBoard_t bb = 0;
+		for (list<Square>::iterator it = attackingSquares.begin(); it != attackingSquares.end(); ++it) {
+			bb |= squareToBitBoard(*it);
 		}
 	}
 
-	if (isPinned)
-		return pinMask;
-	else
-		return 0xFFFFFFFF; // if not pinned, all 1's
-	
-}
+	//
+	//bool MoveGenerator::IsLegalCasteling(const Position* position, Square from, Square to) {
+	//
+	//	Square sq = to;
+	//	if (from.file == 4 && position->POV(from.rank)) {
+	//		// Long
+	//		if (to.file == 2) {
+	//			if ((to.rank == 0 && position->getCastelingPossible(BLACK_LONG)) ||
+	//				(to.rank == 7 && position->getCastelingPossible(WHITE_LONG))) {
+	//				for (int i = 1; i < 4; i++) {
+	//					sq.file = i;
+	//					if (!position->IsEmptySquare(sq))
+	//						return false;
+	//				}
+	//				for (int i = 2; i < 5; i++) {
+	//					sq.file = i;
+	//					if (position->SquareIsAttacked(position, sq, getOpposite(position->getTurn())))
+	//						return false;
+	//				}
+	//
+	//				return true;
+	//			}
+	//		}
+	//		// short
+	//		else if (to.file == 6) {
+	//			if ((to.rank == 0 && position->getCastelingPossible(BLACK_SHORT)) ||
+	//				(to.rank == 7 && position->getCastelingPossible(WHITE_SHORT))) {
+	//				for (int i = 6; i < 7; i++) {
+	//					sq.file = i;
+	//					if (!position->IsEmptySquare(to))
+	//						return false;
+	//				}
+	//				for (int i = 5; i < 7; i++) {
+	//					sq.file = i;
+	//					if (position->SquareIsAttacked(position, to, getOpposite(position->getTurn())))
+	//						return false;
+	//				}
+	//				return true;
+	//			}
+	//		}
+	//	}
+	//
+	//	return false;
+	//}
+
+
+
+	int MoveGenerator::generateGetOutOfAttack(const Position * position, Square attackedSquare, vector<Square> attackingSquares, list<Move> * moveList) {
+		// Comonly used for when we are being checked, in order not to have to go trough all pieces
+		// moves just to see that we are still checked (could also be usefull for queen attacks)
+		return 0;
+	}
+
+
+	//bool MoveGenerator::movingIntoCheck(const Position* position, Move move) {
+	//	// here it would be nice if we knew allready which pieces was pinned to king and can not be moved,
+	//	// the possibly using bitboard mask to filter out moves instead of calling this each time
+	//	Position tempPosition = *position;
+	//	tempPosition.makeMoveFromTo(move.from, move.to);
+	//	vector<Square> sqrs;
+	//	return RulesManager::KingIsChecked(&tempPosition, &sqrs, position->getTurn());
+	//}
+
+
+	bitBoard_t MoveGenerator::getPinMask(const Position * position, Square thisSquare, Square kingSquare) {
+
+		bitBoard_t pinMask = 0;
+		bool isPinned = false;
+
+		// Are we on same ray as king?
+		Square direction;
+		if (alignedSquares(thisSquare, kingSquare, &direction)) {
+
+			// First check squares between king and our piece, if anyone there no pinn
+			Square sq = thisSquare;
+			while ((sq += direction) != kingSquare && insideBoard(sq)) {
+				//Step towards king along ray 
+				if (!position->IsEmptySquare(sq))
+					return 0xFFFFFFFF;
+				else
+					pinMask |= 1 << SquareToIndex(sq);
+			}
+
+			//If we have not returned it means we are closest to king
+			// Now move other direction to see if there is a relevant slider
+			sq = thisSquare;
+			while (insideBoard(sq -= direction)) {
+
+				int pieceType = abs(position->getPieceOnSquare(sq));
+
+				if (position->IsEmptySquare(sq))
+					pinMask |= 1 << SquareToIndex(sq);
+
+				else if (position->IsEnemyPiece(sq) &&
+					((pieceType == ROOK && (direction.rank != direction.file)) ||
+					(pieceType == BISHOP && direction.rank == direction.file) ||
+						pieceType == QUEEN))
+				{
+					pinMask |= 1 << SquareToIndex(sq);
+					isPinned = true;
+					break;
+				}
+				else // some other piece blocking
+					break;
+			}
+		}
+
+		if (isPinned)
+			return pinMask;
+		else
+			return 0xFFFFFFFF; // if not pinned, all 1's
+
+	}

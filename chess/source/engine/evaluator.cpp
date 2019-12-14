@@ -35,7 +35,7 @@ float Evaluator::countMaterial(const Position* position, set<int> pieceSet) {
 	
 	float count = 0;
 	for (set<int>::iterator it = pieceSet.begin(); it != pieceSet.end(); ++it) {
-		int piece = position->getPieceOnSquare(Position::IndexToSquare(*it));
+		int piece = it->getType();
 		count += NOM_PIECE_WEIGHTS[abs(piece)];
 	}
 	return count;

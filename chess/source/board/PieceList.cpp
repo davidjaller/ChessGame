@@ -71,12 +71,16 @@ void PieceList::updateMovement(Move lastMove, const Board* board, PlayerColor la
 	}
 }
 
-bitBoard_t PieceList::getAttackingBB() {
+bitBoard_t PieceList::getAttackingBB() const{
 	return attacksBB;
 }
 
-bitBoard_t PieceList::getOccupiedBB() {
+bitBoard_t PieceList::getOccupiesBB() const{
 	return occupiedBB;
+}
+
+Piece* PieceList::getPieceOnSquare(Square square) const {
+	return pieces.at(SquareToIndex(square));
 }
 
 void PieceList::add(Piece piece, Square sq) {

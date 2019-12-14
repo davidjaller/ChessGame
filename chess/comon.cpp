@@ -22,6 +22,24 @@ bool isSliderPiece(int piece) {
 	else
 		return false;
 }
+bool alignedSquares(Square square1, Square square2, Square* direction){
+	int rankDist = square2.rank - square1.rank;
+	int fileDist = square2.file - square1.file;
+	*direction = Square(0, 0);
+	if (fileDist == 0 || rankDist == 0 || fileDist == rankDist) {
+		if (rankDist > 0)
+			direction->rank = 1;
+		else if (rankDist < 0)
+			direction->rank = -1;
+		if (fileDist > 0)
+			direction->file = 1;
+		else if (fileDist < 0)
+			direction->file = -1;
+		return true;
+	}
+	else
+		return false;
+	}
 
 PlayerColor getOpposite(PlayerColor color) {
 	if (color == PlayerColor::WHITE)

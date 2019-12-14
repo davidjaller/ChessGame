@@ -40,7 +40,7 @@ void Game::NewGame()
 {
 	players[0]->init();
 	players[1]->init();
-	gamePosition->InitBoard(INIT_BOARD, PlayerColor::WHITE);
+	gamePosition->InitPosition(INIT_BOARD, PlayerColor::WHITE);
 	myScene->CreateScene();
 	myScene->UpdateScreen();
 	player = 0;

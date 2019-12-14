@@ -2,7 +2,6 @@
 #define _player_h
 #include "SharedTypes.h"
 #include "source/board/position.h"
-#include "source/RulesManager.h"
 #include "source/engine/evaluator.h"
 #include "source/engine/moveGenerator.h"
 class Player {
@@ -20,7 +19,7 @@ class Player {
 		void generateMoves();
 		void resetMoves();
 	private:
-		vector<Square> kingAttackers;
+		list<const Piece*> kingAttackers;
 	protected:
 		Position* gamePosition;
 		PlayerColor color;

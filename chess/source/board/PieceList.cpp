@@ -9,23 +9,25 @@ void PieceList::updateMovement(Move lastMove, const Board* board, PlayerColor la
 
 	// Make sure this method is not called until after move has been executed
 
-	bitBoard_t fromBB = 1 << SquareToIndex(lastMove.from);
-	bitBoard_t toBB = 1 << SquareToIndex(lastMove.to);
+	bitBoard_t fromBB = squareToBitBoard(lastMove.from);
+	bitBoard_t toBB = squareToBitBoard(lastMove.to);
 	attacksBB = 0;
 	occupiesBB = 0;
 	Piece* piece;
+	bool reGenerate;
+
 	for (iterator_t it = pieces.begin(); it != pieces.end(); it++) {
 		piece = &it->second;
-		bool reGenerate = false;
+		reGenerate = false;
 
-		if (lastMove.to == pieces->ownSquare) { // This assumes that piece was allready moved in moveList
+		if (lastMove.to == piece->ownSquare) { // This assumes that piece was allready moved in moveList
 			// the piece that moved needs a freach movegeneration
 			reGenerate = true;
 		}
 		else {
 
 			// check the square that was left empty
-			if (((piece->blockedOnBB | piece->killesOn) & fromBB) > 0) {
+			if (((piece->blockedOnBB | piece->canKillOnBB) & fromBB) > 0) {
 				if (piece->isSlider()) {
 					// if slider we need to recalculate its movement
 					reGenerate = true;
@@ -62,13 +64,25 @@ void PieceList::updateMovement(Move lastMove, const Board* board, PlayerColor la
 
 			}
 		}
-		if (regenerate) {
+		if (reGenerate) {
 			// for now update for all directions even though we could know which is needed
-			piece.updateMovement(board);
+			piece->updateMovement(board);
 		}
-		attacksBB |= piece.canMoveToBB | piece.pawnAttacksBB; //for non pawns pawnAttacksBB is 0
-		occupiesBB |= 1 << SquareToIndex(piece->ownSquare);  // actually not needed on every iteration but ok for now
+		attacksBB |= piece->canMoveToBB | piece->pawnAttacksBB; //for non pawns pawnAttacksBB is 0
+		occupiesBB |= squareToBitBoard(piece->ownSquare);  // actually not needed on every iteration but ok for now
 	}
+}
+
+bool PieceList::getPiecesAttackingPiece(Square attackedPieceSquare, list<const Piece*>* attackingPieces) const{
+	bool any = false;
+	bitBoard_t attackedPieceBB = squareToBitBoard(attackedPieceSquare);
+	for (const_iterator_t it = pieces.begin(); it != pieces.end(); it++) {
+		if ((it->second.canKillOnBB & attackedPieceBB) != 0) {
+			any = true;
+			attackingPieces->push_back(&it->second);
+		}
+	}
+	return any;
 }
 
 bitBoard_t PieceList::getAttackingBB() const{
@@ -76,20 +90,26 @@ bitBoard_t PieceList::getAttackingBB() const{
 }
 
 bitBoard_t PieceList::getOccupiesBB() const{
-	return occupiedBB;
+	return occupiesBB;
 }
 
-Piece* PieceList::getPieceOnSquare(Square square) const {
-	return pieces.at(SquareToIndex(square));
+bool PieceList::getPieceOnSquare(Square square, const Piece* piece) const {
+	try {
+		piece = &pieces.at(SquareToIndex(square));
+		return true;
+	}
+	catch(...){
+		return false;
+	}
 }
 
-void PieceList::add(Piece piece, Square sq) {
+void PieceList::add(int pieceType, Square sq) {
 	// Consider constructing the pieces here
 
-	pieces[SquareToIndex(sq)] = piece;
+	pieces[SquareToIndex(sq)] = Piece(pieceType, sq, ownColor);
 }
-void PieceList::movePiece(Square from, Square to) {
-	add(pieces[SquareToIndex(from)], to);
+void PieceList::movePiece(int pieceType, Square from, Square to) {
+	add(pieceType, to);
 	removePiece(from);
 }
 void PieceList::removePiece(Square square) {

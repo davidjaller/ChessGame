@@ -19,14 +19,15 @@ bool Player::isChecked() {
 	if (!kingAttackers.empty())
 		kingAttackers.clear();
 	
-	bool checked = RulesManager::KingIsChecked(gamePosition, &kingAttackers, color);
+	bool checked = gamePosition->KingIsChecked(&kingAttackers, color);
 
 	return checked;
 }
 
 void Player::generateMoves(){
 	resetMoves();
-	MoveGenerator::generateAll(gamePosition, &possibleMoves);
+	MoveGenerator::generateMoves(gamePosition, &possibleMoves, true); // captures
+	MoveGenerator::generateMoves(gamePosition, &possibleMoves, false); //pushes
 }
 
 void Player::resetMoves() {
@@ -34,7 +35,7 @@ void Player::resetMoves() {
 }
 
 bool Player::canMove() {
-	resetMoves();
-	return MoveGenerator::generateAll(gamePosition, &possibleMoves) > 0;
+	generateMoves();
+	return possibleMoves.size() > 0;
 }
 

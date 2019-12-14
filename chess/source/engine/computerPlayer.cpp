@@ -53,8 +53,8 @@ float ComputerPlayer::minMaxRecursive(Position position, int level) {
 	int nrMoves = MoveGenerator::generateMoves(&position, &moveList, true); //captures first
 	nrMoves += MoveGenerator::generateMoves(&position, &moveList, false); //pushes after (good for pruning)
 	if (nrMoves == 0) { // can't not move
-		vector<Square> square_v;
-		if (position.KingIsChecked(&square_v, position.getTurn())) // mate
+		list<const Piece*> pieces;
+		if (position.KingIsChecked(&pieces, position.getTurn())) // mate
 			if (maximizing)
 				return std::numeric_limits<float>::min();
 			else
@@ -66,13 +66,13 @@ float ComputerPlayer::minMaxRecursive(Position position, int level) {
 	float maxScore = -std::numeric_limits<float>::max();
 	float minScore = std::numeric_limits<float>::max();
 	for (list<Move>::iterator it = moveList.begin(); it != moveList.end(); it++) {
-		Position newBoard = position;
+		Position newPosition = position;
 		Move move = *it;
 		
-		newBoard.makeMoveFromTo(move.from, move.to);
+		newPosition.makeMoveFromTo(move.from, move.to);
 		// is in check? (or generator will take care of that?)
-		newBoard.setTurn(getOpposite(position.getTurn()));
-		float score = minMaxRecursive(newBoard, level + 1);
+		newPosition.setTurn(getOpposite(position.getTurn()));
+		float score = minMaxRecursive(newPosition, level + 1);
 		if (level == 0) {
 			printMoveScore(move, score);
 		}

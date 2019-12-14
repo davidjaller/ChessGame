@@ -6,18 +6,21 @@ Piece::Piece(int pieceType, Square ownSquare, PlayerColor ownColor) {
 	this->pieceType = pieceType;
 	this->ownSquare = ownSquare;
 	this->ownColor = ownColor;
-	ownPositionBB = 1 << SquareToIndex(ownSquare);
+
+	ownPositionBB = squareToBitBoard(ownSquare);
 	canMoveToBB = 0;
 	blockedOnBB = 0;
 	canKillOnBB = 0;
 	pawnAttacksBB = 0;
 }
 
-int Piece::getType() {
+Piece::Piece(){}
+
+int Piece::getType() const{
 	return pieceType;
 }
 
-bool Piece::isSlider() {
+bool Piece::isSlider() const{
 	if (pieceType == ROOK || pieceType == BISHOP || pieceType == QUEEN)
 		return true;
 	else
@@ -94,15 +97,15 @@ void Piece::generateForSliders(const Board* board, vector<array<int, 2>> directi
 		while (insideBoard(to.rank += directions[i][0], to.file += directions[i][1])) {
 
 			if (isOurFriend(to, board)){
-				blockedOnBB |= 1 << SquareToIndex(to);
+				blockedOnBB |= squareToBitBoard(to);
 				break;
 			}
 			else if (isOurEnemy(to, board)) {
-				canKillOnBB |= 1 << SquareToIndex(to);
+				canKillOnBB |= squareToBitBoard(to);
 				break;
 			}
 			else { //empty square
-				canMoveToBB |= 1 << SquareToIndex(to);
+				canMoveToBB |= squareToBitBoard(to);
 			}
 		}
 	}
@@ -131,17 +134,17 @@ void Piece::generateForPawn(const Board* board) {
 	to.rank = ownSquare.rank + push1;
 	if (to.rank < 8 && to.rank >= 0) {
 		if (board->IsEmptySquare(to)) 
-			canMoveToBB |= 1 << SquareToIndex(to);
+			canMoveToBB |= squareToBitBoard(to);
 			// two
 			to.rank = ownSquare.rank + push2;
 			if (to.rank < 8 && to.rank >= 0) {
 				if (board->IsEmptySquare(to))
-					canMoveToBB |= 1 << SquareToIndex(to);
+					canMoveToBB |= squareToBitBoard(to);
 				else
-					blockedOnBB |= 1 << SquareToIndex(to);
+					blockedOnBB |= squareToBitBoard(to);
 			}
 		else
-			blockedOnBB |= 1 << SquareToIndex(to);
+			blockedOnBB |= squareToBitBoard(to);
 	}
 	// kill
 	to.rank = ownSquare.rank + push1;
@@ -149,17 +152,17 @@ void Piece::generateForPawn(const Board* board) {
 	to.file = ownSquare.file - 1;
 	if (to.file >= 0){
 		if (isOurEnemy(to, board)) 
-			canKillOnBB |= 1 << SquareToIndex(to);
-		else if(board->IsEmptySquare)
-			pawnAttacksBB |= 1 << SquareToIndex(to);
+			canKillOnBB |= squareToBitBoard(to);
+		else if(board->IsEmptySquare(to))
+			pawnAttacksBB |= squareToBitBoard(to);
 	}
 	// right
 	to.file = ownSquare.file + 1;
 	if (to.file < 8){
 		if (isOurEnemy(to, board))
-			canKillOnBB |= 1 << SquareToIndex(to);
-		else if (board->IsEmptySquare)
-			pawnAttacksBB |= 1 << SquareToIndex(to);
+			canKillOnBB |= squareToBitBoard(to);
+		else if (board->IsEmptySquare(to))
+			pawnAttacksBB |= squareToBitBoard(to);
 	}
 }
 
@@ -175,11 +178,11 @@ void Piece::generateForKnight(const Board* board) {
 
 		if (insideBoard(to)) {
 			if (isOurFriend(to, board))
-				blockedOnBB |= 1 << SquareToIndex(to);
+				blockedOnBB |= squareToBitBoard(to);
 			else if (isOurEnemy(to, board))
-				canKillOnBB |= 1 << SquareToIndex(to);
+				canKillOnBB |= squareToBitBoard(to);
 			else
-				canMoveToBB |= 1 << SquareToIndex(to);
+				canMoveToBB |= squareToBitBoard(to);
 		}
 	}
 }
@@ -189,15 +192,17 @@ void Piece::generateForKing(const Board* board) {
 	vector<array <int, 2>> directions = { { {-1,0}, {-1, -1}, {0, -1}, {1, -1} ,{1, 0}, {1, 1}, {0, 1}, {-1, 1} } };
 	Square to;
 
-	//Casteling move, we check later if this is legal
+	//Casteling moves handled later when filtering moves
+	/*
 	to.rank = ownSquare.rank;
 	// Long
 	to.file = 2;
-	canMoveToBB |= 1 << SquareToIndex(to);
+	canMoveToBB |= squareToBitBoard(to);
 	
 	// Short
 	to.file = 6;
-	canMoveToBB |= 1 << SquareToIndex(to);
+	canMoveToBB |= squareToBitBoard(to); 
+	*/
 	
 
 	// Normal move
@@ -207,11 +212,11 @@ void Piece::generateForKing(const Board* board) {
 		to.file = ownSquare.file + directions[i][1];
 		if (insideBoard(to)) {
 			if (isOurFriend(to, board))
-				blockedOnBB |= 1 << SquareToIndex(to);
+				blockedOnBB |= squareToBitBoard(to);
 			else if (isOurEnemy(to, board))
-				canKillOnBB |= 1 << SquareToIndex(to);
+				canKillOnBB |= squareToBitBoard(to);
 			else
-				canMoveToBB |= 1 << SquareToIndex(to);
+				canMoveToBB |= squareToBitBoard(to);
 		}
 	}
 }

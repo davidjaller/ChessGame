@@ -30,9 +30,6 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\RulesManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\engine\computerPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
     <ClCompile Include="source\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\board\FundamentalBoard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\io\moveVisualiserPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +64,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\board\Piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\board\position.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\board\PieceList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,9 +87,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\RulesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\board\Board.h">
@@ -116,9 +113,6 @@
     <ClInclude Include="source\SharedTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\board\FundamentalBoard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\io\moveVisualiserPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,6 +126,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\board\Piece.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\board\PieceList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\board\position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

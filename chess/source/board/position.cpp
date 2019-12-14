@@ -1,30 +1,29 @@
 
 #include "source/board/Position.h"
 
-Position::Position() {};
+Position::Position() : whiteAlivePieces(PlayerColor::WHITE), blackAlivePieces(PlayerColor::BLACK) {};
 
 // This is usefull for unit testing
 void Position::InitPosition(array<array<int, 8>, 8> initMatrix, PlayerColor turn)
 {
 	Square sq;
-	for (int sq.rank = 0; sq.rank < 8; sq.rank++)
+	for (sq.rank = 0; sq.rank < 8; sq.rank++)
 	{
-		for (int sq.file = 0; sq.file < 8; sq.file++)
+		for (sq.file = 0; sq.file < 8; sq.file++)
 		{
-			pieceType = initMatrix[sq.rank][sq.file];
-			board.setPieceOnSquare(sq) = pieceType;
-			if (board[rank][file] > 0) {
-				Piece piece = Piece(abs(pieceType, sq, PlayerColor::WHITE));
-				whiteAlivePieces.add(piece, sq));
+			int pieceType = initMatrix[sq.rank][sq.file];
+			board.SetPieceOnSquare(pieceType, sq);
+
+			if (pieceType > 0) {
+				whiteAlivePieces.add(pieceType, sq);
 				if (pieceType == WHITE_KING) {
-					setWhiteKing(sq);
+					board.SetKingPos(PlayerColor::WHITE, sq);
 				}
 			}
-			else if (board[rank][file] < 0) {
-				Piece piece = Piece(abs(pieceType, sq, PlayerColor::BLACK));
-				blackAlivePieces.add(piece, sq);
-				if (pieceType== BLACK_KING) {
-					setBlackKing(sq);
+			else if (pieceType < 0) {
+				blackAlivePieces.add(pieceType, sq);
+				if (pieceType == BLACK_KING) {
+					board.SetKingPos(PlayerColor::BLACK, sq);
 				}
 			}
 		}
@@ -39,36 +38,45 @@ void Position::InitPosition(array<array<int, 8>, 8> initMatrix, PlayerColor turn
 	board.setTurn(turn);
 }
 
-const Board* Position::getBoard() {
-	return board;
+const Board* Position::getBoard() const
+{
+	return &board;
 }
 
-PlayerColor Position::getTurn() const{
+PlayerColor Position::getTurn() const
+{
 	return board.getTurn();
 }
 
-Square Position::getKingPos(PlayerColor kingColor) const{
-	return boad.getKingPos(kingColor);
+void Position::setTurn(PlayerColor turn) 
+{
+	board.setTurn(turn);
 }
 
-bool Position::getCastelingPossible(casteling castelingType) const {
-	return boar.getCastelingPosible(castelingType);
+Square Position::getKingPos(PlayerColor kingColor) const
+{
+	return board.GetKingPos(kingColor);
 }
 
-bitBoard_t Position::getOccupiedSquaresBB(PlayerColor color) const{
-	if (color == PlayerColor::WHITE) {
+bool Position::getCastelingPossible(casteling castelingType) const 
+{
+	return board.getCastelingPossible(castelingType);
+}
+
+bitBoard_t Position::getOccupiedSquaresBB(PlayerColor color) const
+{
+	if (color == PlayerColor::WHITE) 
 		return whiteAlivePieces.getOccupiesBB();
 	else
 		return blackAlivePieces.getOccupiesBB();
-	}
-
 }
-bitBoard_t Position::getAttackedSquaresBB(PlayerColor attackingColor) const{
-	if (attackingColor == PlayerColor::WHITE) {
+
+bitBoard_t Position::getAttackedSquaresBB(PlayerColor attackingColor) const
+{
+	if (attackingColor == PlayerColor::WHITE) 
 		return whiteAlivePieces.getAttackingBB();
 	else
 		return blackAlivePieces.getAttackingBB();
-	}
 }
 
 bool Position::IsEmptySquare(Square sq) const
@@ -122,10 +130,10 @@ void Position::MovePiece(Square from, Square to) {
 	board.SetPieceOnSquare(0, from);
 
 	if (fromPiece > 0) { // white
-		whiteAlivePieces.movePiece(from, to);
+		whiteAlivePieces.movePiece(fromPiece, from, to);
 	}
 	else if (fromPiece < 0) { // black
-		blackAlivePieceIdxs.movePiece(from, to);
+		blackAlivePieces.movePiece(fromPiece, from, to);
 	}
 }
 
@@ -134,11 +142,11 @@ void Position::RemovePiece(Square sq) {
 	int piece = board.getPieceOnSquare(sq);
 
 	if (piece > 0) {
-		whiteAlivePieces.remove(sq);
+		whiteAlivePieces.removePiece(sq);
 		board.outedWhite.push_back(piece);
 	}
 	else if (piece < 0) {
-		blackAlivePieces.remove(sq);
+		blackAlivePieces.removePiece(sq);
 		board.outedBlack.push_back(piece);
 	}
 }
@@ -149,14 +157,14 @@ void Position::PromoteQueen(Square square) {
 	RemovePiece(square);
 
 	if (piece > 0) {
-		SetPieceOnSquare(WHITE_QUEEN, square);
-		whiteAlivePieces.remove(square);
-		whiteAlivePieces.add(WHITE_QUEEN, square)
+		board.SetPieceOnSquare(WHITE_QUEEN, square);
+		whiteAlivePieces.removePiece(square);
+		whiteAlivePieces.add(WHITE_QUEEN, square);
 	}
 	else if (piece < 0)
-		SetPieceOnSquare(BLACK_QUEEN, square);
-		blackAlivePieces.remove(square);
-		blackAlivePieces.add(BLACK_QUEEN, square)
+		board.SetPieceOnSquare(BLACK_QUEEN, square);
+		blackAlivePieces.removePiece(square);
+		blackAlivePieces.add(BLACK_QUEEN, square);
 }
 
 const_iterator_t Position::piecesBegin(PlayerColor color) const{
@@ -173,31 +181,50 @@ const_iterator_t Position::piecesEnd(PlayerColor color) const{
 		return blackAlivePieces.end();
 }
 
+bool Position::IsLegalMove(Square squareFrom, Square squareTo) {
+	const Piece* piece;
+	PieceList* pieces;
+	if (getTurn() == PlayerColor::WHITE)
+		pieces = &whiteAlivePieces;
+	else
+		pieces = &blackAlivePieces;
 
+	if (!pieces->getPieceOnSquare(squareFrom, piece))
+		return false;
+	else {
+		if ((piece->canKillOnBB | piece->canMoveToBB) & squareToBitBoard(squareTo))
+			return true;
+		else
+			return false;
+	}
+}
 
 void Position::makeMoveFromTo(Square from, Square to)
 {
 	int fromPiece = board.getPieceOnSquare(from);
 	int toPiece = board.getPieceOnSquare(to);
 
+	PlayerColor turn = getTurn();
+	
 	// If rook moves update casteling posablity
 	if (fromPiece == WHITE_ROOK && from.rank == 0)
-		setCastelingRight(WHITE_SHORT, false);
+		board.setCastelingRight(WHITE_SHORT, false);
 
 	else if (fromPiece == WHITE_ROOK && from.file == 7)
-		setCastelingRight(WHITE_LONG, false);
+		board.setCastelingRight(WHITE_LONG, false);
 
 	else if (fromPiece == BLACK_ROOK && from.file == 0)
-		setCastelingRight(BLACK_SHORT, false);
+		board.setCastelingRight(BLACK_SHORT, false);
 
 	else if (fromPiece == BLACK_ROOK && from.file == 7)
-		setCastelingRight(BLACK_LONG, false);
+		board.setCastelingRight(BLACK_LONG, false);
 
 	// king move
 	else if (abs(fromPiece) == KING)
 	{
 		// Check if a casteling move and move the rook
-		if (from.file == 4 && POV(from.rank) == 0 && POV(to.rank) == 0) {
+		int firstRank = getFirstRank(turn);
+		if (from.file == 4 && from.rank == firstRank && to.rank == firstRank) {
 			Square rookFrom = from;
 			Square rookTo = to;
 			if (to.file == 2) { // long
@@ -214,17 +241,18 @@ void Position::makeMoveFromTo(Square from, Square to)
 		}
 
 		// if king move then casteling not possible in future
-		if (getTurn() == PlayerColor::WHITE)
+		
+		if (turn == PlayerColor::WHITE)
 		{
-			setCastelingRight(WHITE_SHORT, false);
-			setCastelingRight(WHITE_LONG, false);
+			board.setCastelingRight(WHITE_SHORT, false);
+			board.setCastelingRight(WHITE_LONG, false);
 		}
-		else if (getTurn() == PlayerColor::BLACK)
+		else if (turn == PlayerColor::BLACK)
 		{
-			setCastelingRight(BLACK_SHORT, false);
-			setCastelingRight(BLACK_LONG, false);
+			board.setCastelingRight(BLACK_SHORT, false);
+			board.setCastelingRight(BLACK_LONG, false);
 		}
-		SetKingPos(to);
+		board.SetKingPos(turn, to);
 	}
 	if (!IsEmptySquare(to))
 		MovePieceKill(from, to);
@@ -232,32 +260,34 @@ void Position::makeMoveFromTo(Square from, Square to)
 		MovePiece(from, to);
 
 	//pawn promotion
-	if (abs(fromPiece) == PAWN && (to.rank == 0 || to.rank == 7))
-	{
+	if (abs(fromPiece) == PAWN && to.rank == getLastRank(turn))
 		PromoteQueen(to);
-	}
+	
 }
 
-bool Position::KingIsChecked(vector<Square>* attackingSquares, PlayerColor kingColor) const {
-	return SquareIsAttacked(getKingPos(kingColor), attackingSquares, getOpposite(kingColor));
+bool Position::KingIsChecked(list<const Piece*>* attackingSquares, PlayerColor kingColor) const {
+	return PieceIsAttacked(getKingPos(kingColor), attackingSquares, getOpposite(kingColor));
 }
 
-Piece* Position::getPieceOnSquare(Square square, PlayerColor color) const {
+void Position::getPieceOnSquare(Square square, PlayerColor color, const Piece* piece) const {
 	if (color == PlayerColor::WHITE) 
-		return whiteAlivePieces.getPieceOnSquare(square);
+		whiteAlivePieces.getPieceOnSquare(square, piece);
 	else
-		return blackAlivePieces.getPieceOnSquare(square);
+		blackAlivePieces.getPieceOnSquare(square, piece);
 }
 
-bool Position::SquareIsAttacked(Square square, vector<Square>* attackingSquares, PlayerColor attackingColor)
-{
+bool Position::PieceIsAttacked(Square pieceSquare, list<const Piece*>* attackingPieces, PlayerColor attackingColor) const{
 
-	attackingSquares->clear();
 	Square sq;
 
-	bitBoard_t attackersBB = getAttackedSquaresBB(attackingColor) & squareToBitBoard(square);
+	bitBoard_t attackersBB = getAttackedSquaresBB(attackingColor) & squareToBitBoard(pieceSquare);
 	if (attackersBB != 0) {
-		bitBoardToSquares(attackingSquares, attackersBB);
+
+		if (attackingColor == PlayerColor::WHITE)
+			whiteAlivePieces.getPiecesAttackingPiece(pieceSquare, attackingPieces);
+		else
+			blackAlivePieces.getPiecesAttackingPiece(pieceSquare, attackingPieces);
+		
 		return true;
 	}
 	else
@@ -265,8 +295,8 @@ bool Position::SquareIsAttacked(Square square, vector<Square>* attackingSquares,
 
 }
 
-// Overloaded method without output pointer
-bool Position::SquareIsAttacked( Square square, PlayerColor attackingColor) {
+// Overloaded method without output pointer output
+bool Position::PieceIsAttacked(Square pieceSquare, PlayerColor attackingColor) const{
 
-	return position->getAttackedSquaresBB(attackingColor) & squareToBitBoard(square);
+	return (getAttackedSquaresBB(attackingColor) & squareToBitBoard(pieceSquare)) != 0;
 }

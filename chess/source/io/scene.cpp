@@ -166,11 +166,9 @@ bool Scene::DrawPieces()
 	for (int i = 0; i < 2; i++) {
 		Square sq;
 
-		set<int>::iterator it = gamePosition->getAlivePieceSet(white_black[i])->begin();
-
-		for (; it != gamePosition->getAlivePieceSet(white_black[i])->end(); ++it) {
-			sq = it->getSquare();
-			int piece = it->getType();
+		for (const_iterator_t it = gamePosition->piecesBegin(white_black[i]); it != gamePosition->piecesEnd(white_black[i]); ++it) {
+			sq = it->second.ownSquare;
+			int piece = it->second.getType();
 			file = x1 + SQUARE_SIZE * sq.file;
 			rank = y1 + SQUARE_SIZE * sq.rank;
 			PutPiece(file, rank, piece);
@@ -179,7 +177,7 @@ bool Scene::DrawPieces()
 	}
 
 	int i = 0;
-	while (piece = gamePosition->getPieceOnWhiteOutedSquare(i))
+	while (piece = gamePosition->getBoard()->getPieceOnWhiteOutedSquare(i))
 	{
 		if (i >= 8)
 		{
@@ -196,7 +194,7 @@ bool Scene::DrawPieces()
 		i++;
 	}
 	i = 0;
-	while(piece = gamePosition->getPieceOnBlackOutedSquare(i))
+	while(piece = gamePosition->getBoard()->getPieceOnBlackOutedSquare(i))
 	{
 		
 		if (i >= 8)

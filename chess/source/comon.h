@@ -19,6 +19,10 @@ void printMoveScore(Move move, float score);
 int SquareToIndex(Square sq);
 Square IndexToSquare(int i);
 bool alignedSquares(Square square1, Square square2, Square* direction);
+int getFirstRank(PlayerColor side);
+int getLastRank(PlayerColor side);
 
 bool isSliderPiece(int piece);
+
+void printBitBoard(string bbname, bitBoard_t bb);
 #endif

@@ -1,9 +1,7 @@
 #include "source/engine/evaluator.h"
 
-//float NOM_PIECE_WEIGHTS[5] = {1.0, 3.0, 3.0, 5.0, 9.0};
-//TODO: make the following work, since more clear
 map<int, float> NOM_PIECE_WEIGHTS =
-{ {PAWN,   1.0},
+{{PAWN,   1.0},
 { BISHOP, 3.0 },
 { KNIGHT, 3.0 },
 { ROOK, 5.0 },
@@ -12,11 +10,7 @@ map<int, float> NOM_PIECE_WEIGHTS =
 
 float Evaluator::evaluatePosition(const Position* position, PlayerColor myColor) {
 
-	set<int> myPieceSet = *(position->getAlivePieceSet(myColor));
-	set<int> oponentPieceSet = *(position->getAlivePieceSet(getOpposite(myColor)));
-
-
-	float materialScore = countMaterial(position, myPieceSet) - countMaterial(position, oponentPieceSet);
+	float materialScore = countMaterial(position, myColor) - countMaterial(position, getOpposite(myColor));
 	float mobilityScore = 0;
 
 	// Add up score
@@ -30,12 +24,11 @@ float Evaluator::evaluatePosition(const Position* position, PlayerColor myColor)
 	return score;
 }
 
-
-float Evaluator::countMaterial(const Position* position, set<int> pieceSet) {
+float Evaluator::countMaterial(const Position* position, PlayerColor side) {
 	
 	float count = 0;
-	for (set<int>::iterator it = pieceSet.begin(); it != pieceSet.end(); ++it) {
-		int piece = it->getType();
+	for (const_iterator_t it = position->piecesBegin(side); it != position->piecesEnd(side); ++it) {
+		int piece = it->second.getType();
 		count += NOM_PIECE_WEIGHTS[abs(piece)];
 	}
 	return count;

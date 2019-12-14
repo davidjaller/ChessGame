@@ -81,8 +81,9 @@
     <ClCompile Include="sdl\SDL_gfxPrimitives.c" />
     <ClCompile Include="sdl\SDL_rotozoom.c" />
     <ClCompile Include="source\board\Board.cpp" />
-    <ClCompile Include="source\board\FundamentalBoard.cpp" />
     <ClCompile Include="source\board\Piece.cpp" />
+    <ClCompile Include="source\board\PieceList.cpp" />
+    <ClCompile Include="source\board\position.cpp" />
     <ClCompile Include="source\engine\computerPlayer.cpp" />
     <ClCompile Include="source\engine\evaluator.cpp" />
     <ClCompile Include="source\engine\miniMax.cpp" />
@@ -94,7 +95,6 @@
     <ClCompile Include="source\io\scene.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
-    <ClCompile Include="source\RulesManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sdl\SDL_gfxBlitFunc.h" />
@@ -102,8 +102,9 @@
     <ClInclude Include="sdl\SDL_gfxPrimitives_font.h" />
     <ClInclude Include="sdl\SDL_rotozoom.h" />
     <ClInclude Include="source\board\Board.h" />
-    <ClInclude Include="source\board\FundamentalBoard.h" />
     <ClInclude Include="source\board\Piece.h" />
+    <ClInclude Include="source\board\PieceList.h" />
+    <ClInclude Include="source\board\position.h" />
     <ClInclude Include="source\comon.h" />
     <ClInclude Include="source\engine\computerPlayer.h" />
     <ClInclude Include="source\engine\evaluator.h" />
@@ -115,7 +116,6 @@
     <ClInclude Include="source\io\moveVisualiserPlayer.h" />
     <ClInclude Include="source\io\scene.h" />
     <ClInclude Include="source\Player.h" />
-    <ClInclude Include="source\RulesManager.h" />
     <ClInclude Include="source\SharedTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

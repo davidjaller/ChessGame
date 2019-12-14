@@ -5,10 +5,14 @@
 #include "source/board/board.h"
 #include "source/comon.h"
 
+class Board;
+
 class Piece {
 public:
+	Piece();
 	Piece(int pieceType, Square ownSquare, PlayerColor ownColor);
-	int getType();
+
+	int getType() const;
 	bitBoard_t canMoveToBB;
 	bitBoard_t blockedOnBB;
 	bitBoard_t ownPositionBB;
@@ -17,7 +21,7 @@ public:
 	Square ownSquare;
 	// getters for bitboards
 	void updateMovement(const Board* board);
-	bool isSlider();
+	bool isSlider() const;
 
 private:
 	int pieceType;

@@ -5,7 +5,6 @@
 
 #include "source/Player.h"
 #include "source/SharedTypes.h"
-#include <source/RulesManager.h>
 #include "source/io/Scene.h"
 #include <time.h>
 #include <windows.h>

@@ -143,56 +143,63 @@ bool RulesManager::IsLegalRookMove(const Board* board, Square from, Square to)
 
 bool RulesManager::IsLegalKingMove(const Board* board, Square from, Square to){
 
-	if (IsLegalCasteling(board, from, to))
-		return true;
+	if (from.file == 4 && board->POV(from.rank) == 0 && board->POV(to.rank) == 0 && (to.file == 2 || to.file == 6))
+		// TODO: find out why this check is needed
+	{
+		if (IsLegalCasteling(board, to))
+			return true;
+		else
+			return false;
+	}
 	else if (abs(to.file - from.file) + abs(to.rank - from.rank) == 1 || abs(to.file - from.file) == abs(to.rank - from.rank))
 		return true;
 	else
 		return false;
 }
 
-bool RulesManager::IsLegalCasteling(const Board* board, Square from, Square to){
+bool RulesManager::IsLegalCasteling(const Board* board, Square to){
 
 	Square sq = to;
-	if (from.file == 4 && board->POV(from.rank)) {
-		// Long
-		if (to.file == 2) {
-			if ((to.rank == 0 && board->getCastelingPossible(BLACK_LONG)) ||
-				(to.rank == 7 && board->getCastelingPossible(WHITE_LONG))) {
-				for (int i = 1; i < 4; i++) {
-					sq.file = i;
-					if (!board->IsEmptySquare(sq))
-						return false;
-				}
-				for (int i = 2; i < 5; i++) {
-					sq.file = i;
-					if (SquareIsAttacked(board, sq, getOpposite(board->getTurn())))
-						return false;
-				}
 
-				return true;
+	// Long
+	if (to.file == 2) {
+		if ((to.rank == 0 && board->getCastelingPossible(BLACK_LONG)) ||
+			(to.rank == 7 && board->getCastelingPossible(WHITE_LONG))) {
+			for (int i = 1; i < 4; i++) {
+				sq.file = i;
+				if (!board->IsEmptySquare(sq))
+					return false;
 			}
+			for (int i = 2; i < 5; i++) {
+				sq.file = i;
+				if (SquareIsAttacked(board, sq, getOpposite(board->getTurn())))
+					return false;
+			}
+
+			return true;
 		}
-		// short
-		else if (to.file == 6) {
-			if ((to.rank == 0 && board->getCastelingPossible(BLACK_SHORT)) ||
-				(to.rank == 7 && board->getCastelingPossible(WHITE_SHORT))) {
-				for (int i = 6; i < 7; i++) {
-					sq.file = i;
-					if (!board->IsEmptySquare(to))
-						return false;
-				}
-				for (int i = 5; i < 7; i++) {
-					sq.file = i;
-					if (SquareIsAttacked(board, to, getOpposite(board->getTurn())))
-						return false;
-				}
-				return true;
+	}
+	// short
+	else if (to.file == 6) {
+		if ((to.rank == 0 && board->getCastelingPossible(BLACK_SHORT)) ||
+			(to.rank == 7 && board->getCastelingPossible(WHITE_SHORT))) {
+			for (int i = 6; i < 7; i++) {
+				sq.file = i;
+				if (!board->IsEmptySquare(to))
+					return false;
 			}
+			for (int i = 5; i < 7; i++) {
+				sq.file = i;
+				if (SquareIsAttacked(board, to, getOpposite(board->getTurn())))
+					return false;
+			}
+			return true;
 		}
 	}
 	
+	
 	return false;
+
 }
 
 bool RulesManager::IsLegalQueenMove(const Board* board, Square from, Square to)
@@ -212,7 +219,7 @@ bool RulesManager::IsLegalKnightMove(const Board* board, Square from, Square to)
 	else
 		return false;
 }
-/*
+
 bool RulesManager::KingIsChecked(const Board* board, vector<Square>* attackingSquares, PlayerColor kingColor)
 {
 	return SquareIsAttacked(board, board->GetKingPos(kingColor), attackingSquares, getOpposite(kingColor), true);
@@ -226,22 +233,22 @@ bool RulesManager::SquareIsAttacked(const Board* board, Square square, vector<Sq
 	// What would speed tings up is storing which squares are threatened so that we dont need to call this as often
 	attackingSquares->clear();
 	Square sq;
-
+	
 	set<int> enemySet = board->getAlivePieceSet(attackingColor);
-
+	
 	for (set<int>::iterator it = enemySet.begin(); it != enemySet.end(); ++it) {
 		Board::IndexToSquare(*it, &sq);
-		if (!board->IsEmptySquare(sq) && !board->IsFriendlyPiece(sq))
-		{
-			if (IsLegalMove(board, sq, square))
+			if (!board->IsEmptySquare(sq) && !board->IsFriendlyPiece(sq))
 			{
-				attackingSquares->push_back(sq);
-				if (stopAtFirst)
-					return true;
+				if (IsLegalMove(board, sq, square))
+				{
+					attackingSquares->push_back(sq);
+					if (stopAtFirst)
+						return true;
+				}
 			}
 		}
-	}
-
+	
 	return !attackingSquares->empty();
 }
 
@@ -251,4 +258,4 @@ bool RulesManager::SquareIsAttacked(const Board* board, Square square, PlayerCol
 	vector<Square> sqv;
 	
 	return SquareIsAttacked(board, square, &sqv, attackingColor, true);
-} */
+}

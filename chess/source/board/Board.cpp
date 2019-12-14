@@ -61,9 +61,9 @@ void Board::setTurn(PlayerColor turn) {
 	this->turn = turn;
 }
 
-void Board::SetKingPos(Square sq)
+void Board::SetKingPos(PlayerColor color, Square sq)
 {
-	if (turn == PlayerColor::WHITE)
+	if (color == PlayerColor::WHITE)
 	{
 		whiteKing = sq;
 	}

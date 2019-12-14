@@ -16,7 +16,7 @@ class Evaluator {
 		static float evaluatePosition(const Position* position, PlayerColor playerColor);
 		
 private:
-	static float countMaterial(const Position* position, set<int> pieceSet);
+	static float countMaterial(const Position* position, PlayerColor side);
 	static float countMobilityPiece(const Position* position, Square pieceSquare);
 	static float countMobilityPlayer(const Position* position, set<int> pieceSet);
 		

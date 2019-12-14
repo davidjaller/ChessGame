@@ -48,6 +48,20 @@ PlayerColor getOpposite(PlayerColor color) {
 		return PlayerColor::WHITE;
 }
 
+int getFirstRank(PlayerColor side) {
+	if (side == PlayerColor::WHITE)
+		return 7;
+	else
+		return 0;
+}
+
+int getLastRank(PlayerColor side) {
+	if (side == PlayerColor::WHITE)
+		return 0;
+	else
+		return 7;
+}
+
 void printMove(Move move) {
 	cout << moveToStr(move) << endl;
 }
@@ -87,7 +101,6 @@ int SquareToIndex(Square sq) {
 	return sq.rank * 8 + sq.file;
 }
 
-
 Square IndexToSquare(int index) {
 	// 64 squares, index row by row from top left
 	// index 0 is file=0, rank=0, index 7 is x7, rank=0, index 63 is file=7, rank=7
@@ -116,4 +129,20 @@ void bitBoardToSquares(vector<Square>* square_v, bitBoard_t bitBoard) {
 
 bitBoard_t squareToBitBoard(Square sq) {
 	return bitBoard_t(1) << SquareToIndex(sq);
+}
+
+void printBitBoard(string bbname, bitBoard_t bb) {
+	string outStr;
+	cout << "Bitboard " << bbname << ": " <<endl; 
+	for (int i = 0; i < 64; i++) {
+		if (i % 8 == 0)
+			cout << endl;
+		if ((bb & 1) == 1)
+			cout << "1";
+		else
+			cout << "0";
+		bb >> 1;
+		
+	}
+	cout << endl;
 }

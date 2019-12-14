@@ -27,7 +27,7 @@ public:
 
 	int getPieceOnSquare(Square sq) const;
 	int getPieceOnSquare(int sqY, int sqX) const;
-	bool IsEmptySquare(Square sq) const
+	bool IsEmptySquare(Square sq) const;
 
 	int getPieceOnWhiteOutedSquare(int square) const;
 	int getPieceOnBlackOutedSquare(int square) const;
@@ -44,7 +44,7 @@ public:
 	vector<int> outedWhite;
 	vector<int> outedBlack;
 
-	void SetKingPos(Square sq);
+	void SetKingPos(PlayerColor color, Square sq);
 	void SetPieceOnSquare(int piece, Square sq);
 	void SetPieceOnSquare(int piece, int rank, int file);
 

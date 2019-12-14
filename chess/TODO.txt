@@ -1,0 +1,1 @@
+* pieceType and file and rank numbers should have custom type

@@ -15,24 +15,24 @@
 using namespace std;
 
 array<array<int, 8>, 8> INIT_BOARD = { {
-						{-4, -3, -2, -5, -6, -2, -3, -4},
-						{-1, -1, -1, -1, -1, -1, -1, -1},
+						{-4, -3, -2, -5, 0, -2, -3, -4},
+						{-1, -1, -1, -1, -6, -1, -1, -1},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 1,  1,  1,  1,  1,  1,  1,  1},
-						{ 4,  3,  2,  5,  6,  2,  3,  4}
+						{ 1,  1,  1,  1,  5,  1,  1,  1},
+						{ 4,  3,  2,  1,  6,  0,  0,  4}
 } };
 //array<array<int, 8>, 8> INIT_BOARD = { {
-//						{-1, -4, -2, -5, -6, -2, -4, -1},
-//						{ 0,   0,  0,  0,  0,  0,  0, 0},
 //						{ 0,  0,  0,  0,  0,  0,  0,  0},
 //						{ 0,  0,  0,  0,  0,  0,  0,  0},
 //						{ 0,  0,  0,  0,  0,  0,  0,  0},
+//						{ -1,  0,  0,  0,  0,  0,  0, 0},
+//						{ 0,   1,  0,  0,  0,  0,  0, 0},
 //						{ 0,  0,  0,  0,  0,  0,  0,  0},
 //						{ 0,  0,  0,  0,  0,  0,  0,  0},
-//						{ 4,  0,  0,  0,  6,  0,  0,  4}
+//						{ 0,  0,  0,  0,  0,  0,  0,  0}
 //} };
 
 
@@ -151,16 +151,16 @@ bool Board::getCastelingPossible(casteling castelingType) const {
 void Board::setCastelingRight(casteling castelingType, bool possible) {
 	switch (castelingType) {
 	case BLACK_LONG:
-		 castelingPossible.blackLong = false;
+		 castelingPossible.blackLong = possible;
 		 break;
 	case BLACK_SHORT:
-		castelingPossible.blackShort = false;
+		castelingPossible.blackShort = possible;
 		break;
 	case WHITE_SHORT:
-		castelingPossible.whiteShort = false;
+		castelingPossible.whiteShort = possible;
 		break;
 	case WHITE_LONG:
-		castelingPossible.whiteLong = false;
+		castelingPossible.whiteLong = possible;
 		break;
 	default:
 		printf("setCastelingNotPossible: illegal argument");

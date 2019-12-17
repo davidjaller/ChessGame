@@ -51,14 +51,17 @@ int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	scene.CreateScene();
 	scene.UpdateScreen();
 	srand(time(NULL));
-	
+	game.NewGame();
+	bool gameFinnished = false;
 	// ----- Main Loop -----
 	
 	while(!IsKeyDown (SDLK_ESCAPE))
 	{
-		bool finnished = game.StepGame();
+		if (!gameFinnished)
+			gameFinnished = game.StepGame();
+
 		scene.UpdateScreen();
-		if(IsKeyDown(SDLK_F1) || finnished)
+		if(IsKeyDown(SDLK_F1))
 		{
 			game.NewGame();
 		}

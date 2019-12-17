@@ -21,7 +21,7 @@ struct Square
 		: rank(rank), file(file){}
 
 	Square operator+(const Square& a) const{
-		return Square(a.file + file, a.rank + rank);
+		return Square(a.rank + rank, a.file + file);
 	}
 	Square operator+=(const Square& a) {
 		file += a.file;
@@ -66,15 +66,15 @@ const int KING = 6;
 const int WHITE_PAWN = 1;
 const int BLACK_PAWN = -1;
 const int WHITE_BISHOP = 2;
-const int BLACK_BISHOP = 2;
+const int BLACK_BISHOP = -2;
 const int WHITE_KNIGHT = 3;
-const int BLACK_KNIGHT = 3;
+const int BLACK_KNIGHT = -3;
 const int WHITE_ROOK = 4;
-const int BLACK_ROOK = 4;
+const int BLACK_ROOK = -4;
 const int WHITE_QUEEN = 5;
-const int BLACK_QUEEN = 5;
+const int BLACK_QUEEN = -5;
 const int WHITE_KING = 6;
-const int BLACK_KING = 6;
+const int BLACK_KING = -6;
 
 enum casteling { WHITE_SHORT, WHITE_LONG, BLACK_SHORT, BLACK_LONG };
 

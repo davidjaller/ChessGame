@@ -7,12 +7,12 @@ MoveVisualizerPlayer::MoveVisualizerPlayer(PlayerColor color, Scene* pScene, Pos
 	myScene = pScene;
 
 	init();
-	state = 0;
 }
 
 void MoveVisualizerPlayer::init() {
 	tempPosition = *gamePosition;
 	turnDone = false;
+	state = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,8 +22,8 @@ void MoveVisualizerPlayer::init() {
 bool MoveVisualizerPlayer::stepTurn()
 {	
 	cout << " Score:   " << Evaluator::evaluatePosition(gamePosition, color) << endl;
-
-
+	
+	generateMoves();
 	for (list<Move>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); ++it) {
 		tempPosition = *gamePosition;
 		gamePosition->makeMoveFromTo(it->from, it->to);

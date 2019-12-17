@@ -13,12 +13,13 @@ HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Position* pPosition) 
 	scene = pScene;
 
 	init();
-	state = HumanPlayerState::waitFirstInput;
+	
 }
 
 void HumanPlayer::init() {
 	tempPosition = *gamePosition;
 	turnDone = false;
+	state = HumanPlayerState::waitFirstInput;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,9 +81,19 @@ bool HumanPlayer::stepTurn()
 	//------------------------------------------------
 	else if (state == HumanPlayerState::executeMove)
 	{
-		if (gamePosition->IsLegalMove(squareFrom, squareTo))
+		if (MoveGenerator::IsLegalMove(gamePosition, squareFrom, squareTo))
 		{
-			vector<Square> attackingSquares;
+			gamePosition->makeMoveFromTo(squareFrom, squareTo);
+			scene->CreateScene();
+			scene->MarkSquare(squareFrom);
+			scene->MarkSquare(squareTo);
+			scene->UpdateScreen();
+			Sleep(500);
+			scene->CreateScene();
+			turnDone = true;
+			state = HumanPlayerState::waitFirstInput;
+
+			/*vector<Square> attackingSquares;
 			// Make move on temporary  board and se if king becomes or remaines threatened
 			tempPosition = *gamePosition;
 			tempPosition.makeMoveFromTo(squareFrom, squareTo);
@@ -98,7 +109,6 @@ bool HumanPlayer::stepTurn()
 				Sleep(500);
 				scene->CreateScene();
 
-				// check for check mate should happen here
 				turnDone = true;
 				state = HumanPlayerState::waitFirstInput;
 
@@ -116,7 +126,7 @@ bool HumanPlayer::stepTurn()
 				scene->CreateScene();
 				state = HumanPlayerState::waitFirstInput;
 
-			}
+			}*/
 		}
 		else
 		{

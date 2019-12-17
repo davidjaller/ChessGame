@@ -21,7 +21,7 @@ int Piece::getType() const{
 }
 
 bool Piece::isSlider() const{
-	if (pieceType == ROOK || pieceType == BISHOP || pieceType == QUEEN)
+	if (abs(pieceType) == ROOK || abs(pieceType) == BISHOP || abs(pieceType) == QUEEN)
 		return true;
 	else
 		return false;
@@ -53,7 +53,7 @@ void Piece::updateMovement(const Board* board) {
 
 	// this is pseudo legal move generation, moving in to check and if casteling legal is checked later 
 
-	switch (pieceType)
+	switch (abs(pieceType))
 	{
 	case PAWN:	 generateForPawn(board);
 		break;
@@ -71,26 +71,24 @@ void Piece::updateMovement(const Board* board) {
 
 void Piece::generateForBishop(const Board* board) {
 	vector<array <int, 2>> directions = { {  {-1, -1}, {1, -1}, {1, 1}, {-1, 1} } };
-	return generateForSliders(board, directions);
+	generateForSliders(board, directions);
 }
 
 void Piece::generateForRook(const Board* board) {
 
 	vector<array <int, 2>> directions = { {  {-1, 0}, {1, 0}, {0, 1}, {0, -1} } };
-	return generateForSliders(board, directions);
+	generateForSliders(board, directions);
 }
 
 void Piece::generateForQueen(const Board* board) {
 
 	vector<array <int, 2>> directions = { { {-1,0}, {-1, -1}, {0, -1}, {1, -1} ,{1, 0}, {1, 1}, {0, 1}, {-1, 1} } };
-	return generateForSliders(board, directions);
+	generateForSliders(board, directions);
 }
 
 void Piece::generateForSliders(const Board* board, vector<array<int, 2>> directions) {
 
 	Square to;
-
-	int count = 0;
 	for (int i = 0; i < directions.size(); i++) {
 
 		to = ownSquare;
@@ -114,7 +112,6 @@ void Piece::generateForSliders(const Board* board, vector<array<int, 2>> directi
 void Piece::generateForPawn(const Board* board) {
 
 	int push1, push2, startRank;
-	
 	Square to = ownSquare;
 	if (ownColor == PlayerColor::WHITE) { //rank 0 is black(consider changing)
 		push1 = -1;
@@ -132,17 +129,21 @@ void Piece::generateForPawn(const Board* board) {
 	
 	// one
 	to.rank = ownSquare.rank + push1;
-	if (to.rank < 8 && to.rank >= 0) {
+	if (to.rank < 8 && to.rank >= 0) 
+	{
 		if (board->IsEmptySquare(to)) 
+		{
 			canMoveToBB |= squareToBitBoard(to);
 			// two
 			to.rank = ownSquare.rank + push2;
-			if (to.rank < 8 && to.rank >= 0) {
+			if (ownSquare.rank == startRank) 
+			{
 				if (board->IsEmptySquare(to))
 					canMoveToBB |= squareToBitBoard(to);
 				else
 					blockedOnBB |= squareToBitBoard(to);
 			}
+		}
 		else
 			blockedOnBB |= squareToBitBoard(to);
 	}

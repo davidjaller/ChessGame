@@ -141,7 +141,7 @@ void printBitBoard(string bbname, bitBoard_t bb) {
 			cout << "1";
 		else
 			cout << "0";
-		bb >> 1;
+		bb = bb >> 1;
 		
 	}
 	cout << endl;

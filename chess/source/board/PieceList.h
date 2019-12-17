@@ -16,7 +16,7 @@ class PieceList {
 
 public:
 	PieceList(PlayerColor ourColor);
-	void movePiece(int pieceType, Square from, Square to);
+	void movePiece( Move move);
 	void removePiece(Square square);
 	void clearList();
 	void add(int pieceType, Square sq);
@@ -26,8 +26,9 @@ public:
 	void updateMovement(Move move, const Board* board, PlayerColor movingSide);
 	bitBoard_t getAttackingBB() const;
 	bitBoard_t getOccupiesBB() const;
-	bool getPieceOnSquare(Square square, const Piece* piece) const;
+	const Piece* getPieceOnSquare(Square square) const;
 	bool getPiecesAttackingPiece(Square attackedPieceSquare, list<const Piece*>* attackingPieces) const;
+	void updateAllMovements(const Board* board);
 
 private:
 	pieces_t pieces; 

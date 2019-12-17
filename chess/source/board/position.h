@@ -24,7 +24,7 @@ public:
 
 	Square getKingPos(PlayerColor kingColor) const;
 	bool getCastelingPossible(casteling castelingType) const;
-	void getPieceOnSquare(Square square, PlayerColor color, const Piece* piece) const;
+	const Piece* getPieceOnSquare(Square square, PlayerColor color) const;
 
 	const_iterator_t piecesBegin(PlayerColor color) const;
 	const_iterator_t piecesEnd(PlayerColor color) const;
@@ -32,7 +32,7 @@ public:
 	bitBoard_t getOccupiedSquaresBB(PlayerColor color) const;
 	bitBoard_t getAttackedSquaresBB(PlayerColor attackingColor) const;
 
-	void MovePiece(Square from, Square to);
+	void MovePiece(Move move);
 	void RemovePiece(Square toSq);
 	PlayerColor getTurn() const;
 	void setTurn(PlayerColor turn);
@@ -41,7 +41,8 @@ public:
 		PlayerColor attackingColor) const;
 	bool PieceIsAttacked(Square square, PlayerColor attackingColor)const;
 	bool KingIsChecked(list<const Piece*>* attackingPieces, PlayerColor kingColor) const;
-	bool IsLegalMove(Square squareFrom, Square squareTo);
+	void updateAllPieces();
+	void updateAffectedPieces(Move move, const Board* board);
 
 	const Board* getBoard() const;
 

@@ -118,17 +118,8 @@ bool Position::IsFriendlyPiece(Square square) const
 	return IsFriendlyPiece(piece);
 }
 
-//void Position::MovePieceKill(Square from, Square to) {
-//
-//	RemovePiece(to);
-//	MovePiece(from, to);
-//}
-//
-//void Position::MovePieceNoKill(Square from, Square to) {
-//	MovePiece(from, to);
-//}
-
-void Position::MovePiece(Move move) {
+void Position::MovePiece(Move move) 
+{
 	if(move.kill)
 		RemovePiece(move.to);
 
@@ -144,7 +135,8 @@ void Position::MovePiece(Move move) {
 	blackAlivePieces.updateMovement(move, &board, getTurn());
 }
 
-void Position::RemovePiece(Square sq) {
+void Position::RemovePiece(Square sq) 
+{
 
 	int piece = board.getPieceOnSquare(sq);
 
@@ -229,7 +221,7 @@ void Position::makeMoveFromTo(Square from, Square to)
 		if (from.file == 4 && from.rank == firstRank && to.rank == firstRank) {
 			Move rookMove;
 			rookMove.from = from;
-			rookMove.piece = ROOK *(1- 2*(int)turn);
+			rookMove.piece = signedPieceType(ROOK, turn);
 			rookMove.kill = false;
 			rookMove.to = to;
 			if (to.file == 2) { // long
@@ -264,8 +256,7 @@ void Position::makeMoveFromTo(Square from, Square to)
 	
 	//pawn promotion
 	if (abs(fromPiece) == PAWN && to.rank == getLastRank(turn)) {
-		//move.piece = QUEEN;
-		PromoteQueen(to);
+		move.piece = signedPieceType(QUEEN, turn); // should consider other promotions also
 	}
 	MovePiece(move);
 }

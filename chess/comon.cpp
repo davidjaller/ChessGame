@@ -73,7 +73,7 @@ void printMoveScore(Move move, float score) {
 string moveToStr(Move move) {
 	string pieceStr;
 	switch (abs(move.piece)) {
-	case PAWN: pieceStr = "";
+	case PAWN: pieceStr = "P";
 		break;
 	case BISHOP: pieceStr = "B";
 		break;
@@ -125,6 +125,14 @@ void bitBoardToSquares(vector<Square>* square_v, bitBoard_t bitBoard) {
 		bitBoard >> 1;
 		i++;
 	}
+}
+
+int signedPieceType(int pieceType, PlayerColor side)
+{
+	if (side == PlayerColor::WHITE)
+		return pieceType;
+	else
+		return -pieceType;
 }
 
 bitBoard_t squareToBitBoard(Square sq) {

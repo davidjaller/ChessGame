@@ -1,1 +1,18 @@
 * pieceType and file and rank numbers should have custom type
+* FEM-string-parser for init position
+* try out Catch2 unit testing
+* find which method consumes most time using VS debug tools - it is very slow!
+	-copy of map seems kandidate -> try changing to array
+* implement movement evaluation
+* one class for each evaluation inhering a base evaluator, could be neat
+* one class for each piece inheriting piece and/or sliding piece
+* implement alpha beta pruning
+* make movegenerator non-static with public method getNextMove() and reset(), 
+  so that we dont need to generate the moves that will be pruned anyways
+* better modularization in movegenerator - to much duplicate code!
+* install VM or docker with ubuntu and adapt code to run there
+* test that we can find and choose check mate
+* en pasan
+* other promotions in movegeneration
+* other promotions in gui
+* naming eg. sideToMove rather than color

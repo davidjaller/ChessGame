@@ -40,7 +40,6 @@ public:
 	bool getCastelingPossible(casteling castelingType) const;
 	void setCastelingRight(casteling castelingType, bool possible);
 
-	int POV(int rankNumber) const;
 	vector<int> outedWhite;
 	vector<int> outedBlack;
 

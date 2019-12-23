@@ -15,14 +15,14 @@
 using namespace std;
 
 array<array<int, 8>, 8> INIT_BOARD = { {
-						{-4, -3, -2, -5, 0, -2, -3, -4},
-						{-1, -1, -1, -1, -6, -1, -1, -1},
+						{-4, -3, -2, -5, -6, -2, -3, -4},
+						{-1, -1, -1, -1, -1, -1, -1, -1},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 1,  1,  1,  1,  5,  1,  1,  1},
-						{ 4,  3,  2,  1,  6,  0,  0,  4}
+						{ 1,  1,  1,  1,  1,  1,  1,  1},
+						{ 4,  3,  2,  5,  6,  2,  3,  4}
 } };
 //array<array<int, 8>, 8> INIT_BOARD = { {
 //						{ 0,  0,  0,  0,  0,  0,  0,  0},
@@ -35,12 +35,9 @@ array<array<int, 8>, 8> INIT_BOARD = { {
 //						{ 0,  0,  0,  0,  0,  0,  0,  0}
 //} };
 
-
-
 Board::Board()
 {
 	board = { {} };
-
 }
 
 Board::~Board() {}
@@ -54,30 +51,21 @@ Square Board::GetKingPos(PlayerColor pl) const
 		return blackKing;
 }
 
-PlayerColor Board::getTurn() const {
+PlayerColor Board::getTurn() const 
+{
 	return turn;
 }
-void Board::setTurn(PlayerColor turn) {
+void Board::setTurn(PlayerColor turn) 
+{
 	this->turn = turn;
 }
 
 void Board::SetKingPos(PlayerColor color, Square sq)
 {
 	if (color == PlayerColor::WHITE)
-	{
 		whiteKing = sq;
-	}
 	else
-	{
 		blackKing = sq;
-	}
-}
-
-int Board::POV(int rankNumber) const {
-	if (turn == PlayerColor::BLACK)
-		return rankNumber;
-	else
-		return 7 - rankNumber;
 }
 
 bool Board::IsEmptySquare(Square sq) const
@@ -88,27 +76,27 @@ bool Board::IsEmptySquare(Square sq) const
 		return false;
 }
 
-
 int Board::getPieceOnSquare(Square sq) const
 {
 	if (sq.file > 7 || sq.rank > 7 || sq.file < 0 || sq.rank < 0) {
-		(void)fprintf(stderr, "iligal square : \n");
-		return 0;
+		throw("getPieceOnSquare: Illigal argument");
 	}
 	return board[sq.rank][sq.file];
 }
 
-int Board::getPieceOnSquare(int sqY, int sqX) const {
+int Board::getPieceOnSquare(int sqY, int sqX) const 
+{
 	return board[sqY][sqX];
 }
 
 void Board::SetPieceOnSquare(int piece, Square sq)
 {
-	if (sq.rank >= 0 && sq.rank < 8 && sq.file >= 0 && sq.file < 8) {
+	if (sq.rank >= 0 && sq.rank < 8 && sq.file >= 0 && sq.file < 8) 
+	{
 		board[sq.rank][sq.file] = piece;
 	}
 	else
-		cout << "SetPieceOnSquare(): Out of bounds" << endl;
+		throw("SetPieceOnSquare(): Out of bounds");
 }
 
 void Board::SetPieceOnSquare(int piece, int sqY, int sqX)
@@ -132,9 +120,10 @@ int Board::getPieceOnBlackOutedSquare(int square) const
 		return 0;
 }
 
-
-bool Board::getCastelingPossible(casteling castelingType) const {
-	switch (castelingType) {
+bool Board::getCastelingPossible(casteling castelingType) const 
+{
+	switch (castelingType) 
+	{
 	case BLACK_LONG:
 		return castelingPossible.blackLong;
 	case BLACK_SHORT:
@@ -144,12 +133,14 @@ bool Board::getCastelingPossible(casteling castelingType) const {
 	case WHITE_LONG:
 		return castelingPossible.whiteLong;
 	default:
-		return false;
+		throw("getCastelingPossible: illegal argument");
 	}
 }
 
-void Board::setCastelingRight(casteling castelingType, bool possible) {
-	switch (castelingType) {
+void Board::setCastelingRight(casteling castelingType, bool possible) 
+{
+	switch (castelingType) 
+	{
 	case BLACK_LONG:
 		 castelingPossible.blackLong = possible;
 		 break;
@@ -163,7 +154,7 @@ void Board::setCastelingRight(casteling castelingType, bool possible) {
 		castelingPossible.whiteLong = possible;
 		break;
 	default:
-		printf("setCastelingNotPossible: illegal argument");
+		throw("setCastelingRight: illegal argument");
 		break;
 	}
 }

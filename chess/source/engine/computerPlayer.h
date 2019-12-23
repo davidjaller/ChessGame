@@ -20,9 +20,9 @@ public:
 	bool stepTurn();
 	void init();
 private:
-	float minMaxRecursive(Position position, int level);
+	float minMaxRecursive(Position position, Move move, int level);
 	bool findBestMove();
-	int nodeCount;
+	int nrEvaluatedPositions;
 	Move bestMove;
 	Scene* scene;
 };

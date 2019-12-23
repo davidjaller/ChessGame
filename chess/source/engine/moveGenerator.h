@@ -14,7 +14,7 @@ public:
 	static int generateMoves(const Position* position, list<Move>* moveList, bool generateCaptures);
 	static bool IsLegalMove(const Position* position, Square squareFrom, Square squareTo);
 private:
-	static int bitBoardToMoves(bitBoard_t movementBB, list<Move>* moveList, Square fromSquare, bool kill);
+	static int bitBoardToMoves(bitBoard_t movementBB, list<Move>* moveList, Square fromSquare, bool kill, int pieceType);
 	static bitBoard_t getCastellingBB(const Position* position, PlayerColor turn);
 	static bitBoard_t getPinMask(const Position* position, Square from, Square kingSquare);
 	static bitBoard_t getKingShadowsBB(list<const Piece*> attackingSquares, PlayerColor turn, Square kingSquare);

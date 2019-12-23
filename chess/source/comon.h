@@ -23,6 +23,7 @@ int getFirstRank(PlayerColor side);
 int getLastRank(PlayerColor side);
 
 bool isSliderPiece(int piece);
+int signedPieceType(int pieceType, PlayerColor side);
 
 void printBitBoard(string bbname, bitBoard_t bb);
 #endif

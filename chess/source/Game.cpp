@@ -4,10 +4,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // ------ Includes -----
-#ifndef LINUX
+
 #include <windows.h>
 #include <math.h>
-#endif
+
 #include "Game.h"
 #include "source/io/moveVisualiserPlayer.h"
 
@@ -24,8 +24,8 @@ Game::Game(Scene *pScene, Position *pPosition)// : player1(PlayerColor::WHITE, p
 	myScene = pScene;
 	player = 0;
 	//players.push_back(unique_ptr<Player>(new MoveVisualizerPlayer(PlayerColor::WHITE, pScene, pPosition)));
-	players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::WHITE, pScene, pPosition)));
-	//players.push_back(unique_ptr<Player> (new ComputerPlayer(PlayerColor::WHITE, pScene, pPosition)));
+	//players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::WHITE, pScene, pPosition)));
+	players.push_back(unique_ptr<Player> (new ComputerPlayer(PlayerColor::WHITE, pScene, pPosition)));
 	players.push_back(unique_ptr<Player> (new HumanPlayer(PlayerColor::BLACK, pScene, pPosition)));
 	
 }
@@ -47,27 +47,26 @@ void Game::NewGame()
 	player = 0;
 }
 
-bool Game::StepGame() {
-		
-		// Add Check for check mate or draw here!
+bool Game::StepGame() 
+{
 
 	bool finnished = false;
 
-		if (players[player]->stepTurn()) { //returns done if finished
+	if (players[player]->stepTurn()) { //returns done if finished
 
-			player = !player;
-			gamePosition->setTurn(players[player]->GetColor());
-	/*		if(!players[player]->canMove()) {
-				if (players[player]->isChecked()) {
-					cout << "player " << !player << "is winner" << endl;
-				}
-				else
-					cout << "game is draw" << endl;
-				finnished = true;
-			}*/
+		player = !player;
+		gamePosition->setTurn(players[player]->GetColor());
+		if (!players[player]->canMove()) {
+			if (players[player]->isChecked()) {
+				cout << "player " << !player << "is winner" << endl;
+			}
+			else
+				cout << "game is draw" << endl;
+			finnished = true;
 		}
+	}
 
-		return finnished;
+	return finnished;
 }
 
 

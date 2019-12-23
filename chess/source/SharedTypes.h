@@ -26,6 +26,7 @@ struct Square
 	Square operator+=(const Square& a) {
 		file += a.file;
 		rank += a.rank;
+		return *this;
 	}
 
 	Square operator-(const Square& a) const{
@@ -34,6 +35,7 @@ struct Square
 	Square operator-=(const Square& a) {
 		file -= a.file; 
 		rank -= a.rank;
+		return *this;
 	}
 
 	bool operator==(const Square& a) const{

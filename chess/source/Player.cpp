@@ -26,7 +26,7 @@ bool Player::isChecked() {
 
 void Player::generateMoves(){
 	resetMoves();
-	//MoveGenerator::generateMoves(gamePosition, &possibleMoves, true); // captures
+	MoveGenerator::generateMoves(gamePosition, &possibleMoves, true); // captures
 	MoveGenerator::generateMoves(gamePosition, &possibleMoves, false); //pushes
 }
 

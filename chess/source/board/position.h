@@ -3,6 +3,8 @@
 #include "source/board/board.h"
 #include "source/board/PieceList.h"
 #include <map>
+#include<sstream>
+
 using namespace std;
 using pieces_t = map<int, Piece>;
 using const_iterator_t = pieces_t::const_iterator;
@@ -12,6 +14,9 @@ public:
 	Position();
 
 	void InitPosition(array<array<int, 8>, 8> initMatrix, PlayerColor turn = PlayerColor::WHITE);
+	void InitPosition(const string &fenStr);
+
+	
 
 	void makeMoveFromTo(Square from, Square to);
 	bool IsEmptySquare(Square sq) const;
@@ -19,8 +24,6 @@ public:
 	bool IsFriendlyPiece(Square sq) const;
 	bool IsEnemyPiece(Square sq) const;
 	void PromoteQueen(Square square);
-	void MovePieceKill(Square from, Square to);
-	void MovePieceNoKill(Square from, Square to);
 
 	Square getKingPos(PlayerColor kingColor) const;
 	bool getCastelingPossible(casteling castelingType) const;
@@ -32,8 +35,7 @@ public:
 	bitBoard_t getOccupiedSquaresBB(PlayerColor color) const;
 	bitBoard_t getAttackedSquaresBB(PlayerColor attackingColor) const;
 
-	void MovePiece(Move move);
-	void RemovePiece(Square toSq);
+
 	PlayerColor getTurn() const;
 	void setTurn(PlayerColor turn);
 
@@ -50,7 +52,9 @@ private:
 	Board board;
 	PieceList whiteAlivePieces;
 	PieceList blackAlivePieces;
-
+	void setPiece(int pieceType, Square sq);
+	void MovePiece(Move move);
+	void RemovePiece(Square toSq);
 };
 
 #endif 

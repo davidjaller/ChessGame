@@ -45,6 +45,16 @@ struct Square
 	bool operator!=(const Square& a) const{
 		return !(file == a.file && rank == a.rank);
 	}
+
+	Square operator++() {
+		if (rank >= 7 && file >= 7)
+			return *this;
+		if (++file > 7) {
+			file = 0;
+			rank++;
+		}
+		return *this;
+	}
 };
 
 typedef struct

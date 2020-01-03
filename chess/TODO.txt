@@ -1,5 +1,8 @@
+* solve movegen bug rook moving diagnonaly over pawn to kill
 * pieceType and file and rank numbers should have custom type
 * FEM-string-parser for init position
+* Fem-string debug output of previous position so when we see a bug while playing we can run that situation again
+  (also a temp position with the previos, and a short cut to go back would be usefull)
 * try out Catch2 unit testing
 * find which method consumes most time using VS debug tools - it is very slow!
 	-copy of map seems kandidate -> try changing to array
@@ -16,3 +19,4 @@
 * other promotions in movegeneration
 * other promotions in gui
 * naming eg. sideToMove rather than color
+* move bitboard methods to own file

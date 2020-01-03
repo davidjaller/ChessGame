@@ -34,11 +34,14 @@ public:
 	bool StepGame();
 	void NewGame();
 
+	void resetToPrevious();
+
 private:
 	Scene *myScene;
 	Position *gamePosition;
 	int player;
 	vector<unique_ptr<Player>> players;
+	Position previousPosition;
 };
 
 #endif // _GAME_

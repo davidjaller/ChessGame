@@ -3,7 +3,7 @@
 
 Piece::Piece(int pieceType, Square ownSquare, PlayerColor ownColor) {
 
-	this->pieceType = pieceType;
+	this->type = pieceType;
 	this->ownSquare = ownSquare;
 	this->ownColor = ownColor;
 
@@ -16,12 +16,8 @@ Piece::Piece(int pieceType, Square ownSquare, PlayerColor ownColor) {
 
 Piece::Piece(){}
 
-int Piece::getType() const{
-	return pieceType;
-}
-
 bool Piece::isSlider() const{
-	if (abs(pieceType) == ROOK || abs(pieceType) == BISHOP || abs(pieceType) == QUEEN)
+	if (abs(type) == ROOK || abs(type) == BISHOP || abs(type) == QUEEN)
 		return true;
 	else
 		return false;
@@ -44,7 +40,7 @@ bool Piece::isOurFriend(Square sq, const Board* board) {
 }
 
 void Piece::updateMovement(const Board* board) {
-	// consider instead having each type be its own class enheriting from Piece
+	// consider instead having each piece type be its own class enheriting from Piece
 
 	canMoveToBB = 0; // reset
 	blockedOnBB = 0;
@@ -53,7 +49,7 @@ void Piece::updateMovement(const Board* board) {
 
 	// this is pseudo legal move generation, moving in to check and if casteling legal is checked later 
 
-	switch (abs(pieceType))
+	switch (abs(type))
 	{
 	case PAWN:	 generateForPawn(board);
 		break;
@@ -75,7 +71,7 @@ void Piece::generateForBishop(const Board* board) {
 }
 
 void Piece::generateForRook(const Board* board) {
-
+	
 	vector<array <int, 2>> directions = { {  {-1, 0}, {1, 0}, {0, 1}, {0, -1} } };
 	generateForSliders(board, directions);
 }
@@ -87,6 +83,7 @@ void Piece::generateForQueen(const Board* board) {
 }
 
 void Piece::generateForSliders(const Board* board, vector<array<int, 2>> directions) {
+
 
 	Square to;
 	for (int i = 0; i < directions.size(); i++) {
@@ -154,7 +151,7 @@ void Piece::generateForPawn(const Board* board) {
 	if (to.file >= 0){
 		if (isOurEnemy(to, board)) 
 			canKillOnBB |= squareToBitBoard(to);
-		else if(board->IsEmptySquare(to))
+		else
 			pawnAttacksBB |= squareToBitBoard(to);
 	}
 	// right

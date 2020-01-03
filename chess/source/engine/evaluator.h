@@ -7,7 +7,7 @@
 #include <map>
 
 const float MATERIAL_WEIGHT = 1.0;
-const float MOBILITY_WEIGHT = 1.0;
+const float MOBILITY_WEIGHT = 0.1;
 const float QUEEN_MOBILITY_WEIGHT = 2.0;
 
 class Evaluator {
@@ -17,8 +17,7 @@ class Evaluator {
 		
 private:
 	static float countMaterial(const Position* position, PlayerColor side);
-	static float countMobilityPiece(const Position* position, Square pieceSquare);
-	static float countMobilityPlayer(const Position* position, set<int> pieceSet);
+	static int countMobilityPlayer(const Position* position, PlayerColor side);
 		
 };
 

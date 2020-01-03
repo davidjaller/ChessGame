@@ -7,7 +7,9 @@
 #include "source/SharedTypes.h"
 #include "source/io/Scene.h"
 #include <time.h>
+#ifndef __linux__
 #include <windows.h>
+#endif
 
 enum class HumanPlayerState { waitFirstInput, waitSecondInput, executeMove };
 

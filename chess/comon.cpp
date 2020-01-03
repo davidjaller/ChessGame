@@ -1,7 +1,5 @@
 #include "source/comon.h"
 
-
-
 bool insideBoard(Square square) {
 	if (square.rank >= 0 && square.rank < 8 && square.file >= 0 && square.file < 8) 
 		return true;
@@ -26,7 +24,7 @@ bool alignedSquares(Square square1, Square square2, Square* direction){
 	int rankDist = square2.rank - square1.rank;
 	int fileDist = square2.file - square1.file;
 	*direction = Square(0, 0);
-	if (fileDist == 0 || rankDist == 0 || fileDist == rankDist) {
+	if (fileDist == 0 || rankDist == 0 || abs(fileDist) == abs(rankDist)) {
 		if (rankDist > 0)
 			direction->rank = 1;
 		else if (rankDist < 0)
@@ -122,7 +120,7 @@ void bitBoardToSquares(vector<Square>* square_v, bitBoard_t bitBoard) {
 		if ((bitBoard & 1) == 1) {
 			square_v->push_back(IndexToSquare(i));
 		}
-		bitBoard >> 1;
+		bitBoard = bitBoard >> 1;
 		i++;
 	}
 }
@@ -154,3 +152,18 @@ void printBitBoard(string bbname, bitBoard_t bb) {
 	}
 	cout << endl;
 }
+
+int popCountBB(bitBoard_t bitBoard)
+{
+	//TODO: preferably use built in popcount when available and otherwise use quicker algortihm than this
+	int count = 0;
+	do {
+		if ((bitBoard & 1) == 1) 
+		{
+			count++;
+		}
+		bitBoard = bitBoard >> 1;
+	} while (bitBoard > 0);
+	return count;
+}
+

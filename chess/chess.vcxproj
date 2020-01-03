@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="comon.cpp" />
+    <ClCompile Include="debug.cpp" />
     <ClCompile Include="sdl\SDL_gfxBlitFunc.c" />
     <ClCompile Include="sdl\SDL_gfxPrimitives.c" />
     <ClCompile Include="sdl\SDL_rotozoom.c" />
@@ -97,6 +98,7 @@
     <ClCompile Include="source\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="debug.h" />
     <ClInclude Include="sdl\SDL_gfxBlitFunc.h" />
     <ClInclude Include="sdl\SDL_gfxPrimitives.h" />
     <ClInclude Include="sdl\SDL_gfxPrimitives_font.h" />

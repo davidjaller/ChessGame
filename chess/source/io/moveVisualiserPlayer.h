@@ -7,7 +7,9 @@
 #include <source/RulesManager.h>
 #include "source/io/Scene.h"
 #include <time.h>
+#ifndef __linux__
 #include <windows.h>
+#endif
 
 class MoveVisualizerPlayer : public Player {
 public:

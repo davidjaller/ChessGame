@@ -6,7 +6,7 @@ Author: David Jaller
 
 #include "source/io/scene.h"
 #include "source/Game.h"
-#ifndef LINUX
+#ifndef __linux__
 #include <windows.h>
 #endif
 
@@ -36,8 +36,11 @@ int IsKeyDown (int pKey)
 // Main
 //
 ///////////////////////////////////////////////////////////////////////////////
-
+#ifndef __linux__
 int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+#else
+int main()
+#endif
 {
 #ifdef DEBUG_MODE
 	AllocConsole();
@@ -65,6 +68,8 @@ int WINAPI WinMain (_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		{
 			game.NewGame();
 		}
+		if (IsKeyDown(SDLK_F2))
+			game.resetToPrevious();
 	}
 	SDL_Quit();
 	return 0;

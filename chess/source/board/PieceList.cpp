@@ -15,10 +15,10 @@ void PieceList::updateAllMovements(const Board* board)
 		Piece* piece = &it->second;
 		piece->updateMovement(board);
 
-		if (abs(piece->getType()) == PAWN)
+		if (abs(piece->type) == PAWN)
 			attacksBB |= piece->canKillOnBB | piece->pawnAttacksBB;
 		else
-			attacksBB |= piece->canKillOnBB | piece->canMoveToBB;
+			attacksBB |= piece->canKillOnBB | piece->canMoveToBB | piece->blockedOnBB;
 
 		occupiesBB |= squareToBitBoard(piece->ownSquare);
 	}
@@ -38,57 +38,62 @@ void PieceList::updateMovement(Move lastMove, const Board* board, PlayerColor la
 	Piece* piece;
 	bool reGenerate;
 
-	for (iterator_t it = pieces.begin(); it != pieces.end(); it++) 
+	for (iterator_t it = pieces.begin(); it != pieces.end(); it++)
 	{
 		piece = &it->second;
 		reGenerate = false;
-		
-		if (lastMove.to == piece->ownSquare) 
-		{ 
-			// the piece that moved needs a freach movegeneration
+
+		if (lastMove.to == piece->ownSquare)
+		{
+			// the piece that moved needs a frech movegeneration
 			reGenerate = true;
 		}
-		else if (abs(piece->getType()) == PAWN) 
+		else if (abs(piece->type) == PAWN)
 		{
 			// pawns behave quite different from rest, a pawn that is in any way affected we give a new update
 			if (((piece->blockedOnBB | piece->canMoveToBB | piece->canKillOnBB | piece->pawnAttacksBB) & (fromBB | toBB)) > 0)
 				reGenerate = true;
 		}
-		else 
+		else
 		{
 			// check the square that was left empty
-			if (((piece->blockedOnBB | piece->canKillOnBB) & fromBB) > 0) 
+			if (((piece->blockedOnBB | piece->canKillOnBB) & fromBB) > 0)
 			{
-				if (piece->isSlider()) 
+				if (piece->type == WHITE_ROOK)
+					int a = 1;
+				if (piece->isSlider())
 				{
 					// if slider we need to recalculate its movement
 					reGenerate = true;
 				}
-				else 
+				else
 				{
 					//if knight or king we can just remove blocker or kill if there
 					piece->blockedOnBB &= ~fromBB;
 					piece->canKillOnBB &= ~fromBB;
 					piece->canMoveToBB |= fromBB;
+
 				}
 			}
-			if (lastMove.kill) 
+			// Check the to-square,
+			if (lastMove.kill)
 			{
-				// since piece color has changed on the to square we can just toggle blockedOn and canKillOn on the to-square
-				piece->blockedOnBB ^= toBB;
-				piece->canKillOnBB ^= toBB;
-				
+				// since piece color has changed on the to square we can just toggle between blockedOn and canKillOn on the to-square
+				bitBoard_t blockedOnTemp = piece->blockedOnBB;
+				piece->blockedOnBB ^= toBB & piece->canKillOnBB;
+				piece->canKillOnBB ^= toBB & blockedOnTemp;
+
 			}
-			// Check the to-square, since not kill, it was empty before
-			else if ((piece->canMoveToBB & toBB) > 0) 
+			//if not kill it was empty before
+			else if ((piece->canMoveToBB & toBB) > 0)
 			{
-				if (piece->isSlider()) 
+				if (piece->isSlider())
 				{
 					// if slider we need to recalculate its movement
 					reGenerate = true;
 				}
-				else 
-				{ // if pawn, knight or king we can handle it quicker
+				else
+				{ // if knight or king we can handle it quicker
 					piece->canMoveToBB &= ~toBB; // we can not move to this square anymore
 					if (lastMoveSide == ownColor)
 						piece->blockedOnBB |= toBB;
@@ -102,10 +107,14 @@ void PieceList::updateMovement(Move lastMove, const Board* board, PlayerColor la
 			// for now update for all directions even though we could know which is needed
 			piece->updateMovement(board);
 		}
-		if(abs(piece->getType()) == PAWN)
+		if (abs(piece->type) == PAWN)
+		{
 			attacksBB |= piece->canKillOnBB | piece->pawnAttacksBB;
-		else
-			attacksBB |= piece->canKillOnBB | piece->canMoveToBB;
+		}
+		else 
+		{
+			attacksBB |= piece->canKillOnBB | piece->canMoveToBB | piece->blockedOnBB;
+		}
 		occupiesBB |= squareToBitBoard(piece->ownSquare);  // actually not needed on every iteration but ok for now
 	}
 }
@@ -182,5 +191,5 @@ const_iterator_t PieceList::end() const
 int PieceList::getPieceType(Square sq) 
 {
 	
-	return pieces[SquareToIndex(sq)].getType();
+	return pieces[SquareToIndex(sq)].type;
 }

@@ -13,7 +13,6 @@ HumanPlayer::HumanPlayer(PlayerColor color, Scene* pScene, Position* pPosition) 
 	scene = pScene;
 
 	init();
-	
 }
 
 void HumanPlayer::init() {
@@ -48,7 +47,6 @@ bool HumanPlayer::stepTurn()
 					state = HumanPlayerState::waitSecondInput;
 				}
 			}
-
 		}
 	}
 	//--------------------------------------------------------------------
@@ -84,6 +82,9 @@ bool HumanPlayer::stepTurn()
 		if (MoveGenerator::IsLegalMove(gamePosition, squareFrom, squareTo))
 		{
 			gamePosition->makeMoveFromTo(squareFrom, squareTo);
+			const Piece* king = gamePosition->getPieceOnSquare(gamePosition->getKingPos(this->color), this->color);
+			printBitBoard("bk block", king->blockedOnBB);
+			printBitBoard("bk move", king->canMoveToBB);
 			scene->CreateScene();
 			scene->MarkSquare(squareFrom);
 			scene->MarkSquare(squareTo);

@@ -2,7 +2,7 @@
 #ifndef _computer_player_h
 #define _computer_player_h
 
-#define MAX_SEARCH_DEPTH 3
+#define MAX_SEARCH_DEPTH 1
 
 #include "source/Player.h"
 #include "source/SharedTypes.h"
@@ -12,6 +12,7 @@
 #include <ctime>
 #include <chrono>
 #include <thread>
+#include "debug.h"
 
 class ComputerPlayer : public Player {
 

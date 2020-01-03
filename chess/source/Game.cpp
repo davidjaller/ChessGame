@@ -5,7 +5,9 @@
 
 // ------ Includes -----
 
+#ifndef __linux__
 #include <windows.h>
+#endif
 #include <math.h>
 
 #include "Game.h"
@@ -41,29 +43,43 @@ void Game::NewGame()
 	players[0]->init();
 	players[1]->init();
 	gamePosition->InitPosition(INIT_BOARD, PlayerColor::WHITE);
+	//gamePosition->InitPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	//gamePosition->InitPosition("rnq4r/ppp3bp/8/4P3/6k1/8/PPPK1P1P/R6R/");
+
 	gamePosition->updateAllPieces();
 	myScene->CreateScene();
 	myScene->UpdateScreen();
 	player = 0;
+	previousPosition = *gamePosition;
 }
+
+void Game::resetToPrevious() {
+	player = !player;
+	*gamePosition = previousPosition;
+	myScene->CreateScene();
+	myScene->UpdateScreen();
+}
+
+
 
 bool Game::StepGame() 
 {
 
 	bool finnished = false;
-
+	Position tempPosition = *gamePosition;
 	if (players[player]->stepTurn()) { //returns done if finished
-
+		previousPosition = tempPosition;
+		
 		player = !player;
 		gamePosition->setTurn(players[player]->GetColor());
-		if (!players[player]->canMove()) {
-			if (players[player]->isChecked()) {
-				cout << "player " << !player << "is winner" << endl;
-			}
-			else
-				cout << "game is draw" << endl;
-			finnished = true;
-		}
+		//if (!players[player]->canMove()) {
+		//	if (players[player]->isChecked()) {
+		//		cout << "player " << !player << "is winner" << endl;
+		//	}
+		//	else
+		//		cout << "game is draw" << endl;
+			//finnished = true;
+		//}
 	}
 
 	return finnished;

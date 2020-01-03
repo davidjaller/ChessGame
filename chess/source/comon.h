@@ -1,11 +1,17 @@
 #pragma once
 #ifndef _comon_h
 
-#define  _comon_h
+#define _comon_h
+
 #include "source/SharedTypes.h"
 #include <string>
 #include <iostream>
 #include <vector>
+
+#include <map>
+#include <sstream>
+class Board;
+
 using namespace std;
 
 bool insideBoard(Square square);
@@ -26,4 +32,6 @@ bool isSliderPiece(int piece);
 int signedPieceType(int pieceType, PlayerColor side);
 
 void printBitBoard(string bbname, bitBoard_t bb);
+int popCountBB(bitBoard_t);
+
 #endif

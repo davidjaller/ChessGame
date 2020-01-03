@@ -6,9 +6,13 @@
 
 // ----- Includes -----
 
+#ifndef __linux__
+#include <windows.h>
+#endif
+
 #include "source/board/Board.h"
 #include "source/Game.h"
-#include "windows.h"
+
 #include <stdio.h>
 #include <math.h>
 #include <string>
@@ -16,12 +20,12 @@ using namespace std;
 
 array<array<int, 8>, 8> INIT_BOARD = { {
 						{-4, -3, -2, -5, -6, -2, -3, -4},
-						{-1, -1, -1, -1, -1, -1, -1, -1},
+						{-1, -1, -1, -1,  -5, -1, -1, -1},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
 						{ 0,  0,  0,  0,  0,  0,  0,  0},
-						{ 1,  1,  1,  1,  1,  1,  1,  1},
+						{ 1,  1,  1,  1,  0,  1,  1,  1},
 						{ 4,  3,  2,  5,  6,  2,  3,  4}
 } };
 //array<array<int, 8>, 8> INIT_BOARD = { {

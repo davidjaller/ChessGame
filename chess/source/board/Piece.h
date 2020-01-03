@@ -2,8 +2,8 @@
 #ifndef _piece_h
 #define _piece_h
 #include "source/SharedTypes.h"
-#include "source/board/board.h"
 #include "source/comon.h"
+#include "source/board/board.h"
 
 class Board;
 
@@ -12,7 +12,6 @@ public:
 	Piece();
 	Piece(int pieceType, Square ownSquare, PlayerColor ownColor);
 
-	int getType() const;
 	bitBoard_t canMoveToBB;
 	bitBoard_t blockedOnBB;
 	bitBoard_t ownPositionBB;
@@ -22,9 +21,10 @@ public:
 	// getters for bitboards
 	void updateMovement(const Board* board);
 	bool isSlider() const;
+	int type;
 
 private:
-	int pieceType;
+	
 	PlayerColor ownColor;
 
 	void generateForPawn(const Board* board);

@@ -7,11 +7,10 @@ map<int, float> NOM_PIECE_WEIGHTS =
 { ROOK, 5.0 },
 { QUEEN, 9.0 } };
 
-
 float Evaluator::evaluatePosition(const Position* position, PlayerColor myColor) {
 
 	float materialScore = countMaterial(position, myColor) - countMaterial(position, getOpposite(myColor));
-	float mobilityScore = 0;
+	float mobilityScore = float(countMobilityPlayer(position, myColor) - countMobilityPlayer(position, getOpposite(myColor)));
 
 	// Add up score
 	array<array<float, 2>, 2> scores_weights = 
@@ -28,14 +27,18 @@ float Evaluator::countMaterial(const Position* position, PlayerColor side) {
 	
 	float count = 0;
 	for (const_iterator_t it = position->piecesBegin(side); it != position->piecesEnd(side); ++it) {
-		int piece = it->second.getType();
+		int piece = it->second.type;
 		count += NOM_PIECE_WEIGHTS[abs(piece)];
 	}
 	return count;
 }
-float Evaluator::countMobilityPiece(const Position* position, Square pieceSquare) {
-	return 0;
-}
- float Evaluator::countMobilityPlayer(const Position* position, set<int> pieceSet) {
-	 return 0;
+
+ int Evaluator::countMobilityPlayer(const Position* position, PlayerColor side) {
+	 bitBoard_t attackedBB = position->getAttackedSquaresBB(getOpposite(side));
+	 int count = 0;
+	 for (const_iterator_t it = position->piecesBegin(side); it != position->piecesEnd(side); ++it)
+	 {
+		 count += popCountBB((it->second.canMoveToBB) & ~attackedBB);
+	 }
+	 return count;
 }

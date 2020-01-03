@@ -14,19 +14,31 @@ bool ComputerPlayer::stepTurn()
 
 	//code_to_time();
 	bool success = findBestMove();
+	//if (!MoveGenerator::IsLegalMove(gamePosition, bestMove.from, bestMove.to))
+		//throw("Error, confliction between IsLegal and generateMoves");
+
+//#ifdef DEBUG_MODE
+	//const Piece* piece = gamePosition->getPieceOnSquare(bestMove.from, color);
+	//const Piece* piece = gamePosition->getPieceOnSquare(Square(7,0), color);
+	//cout << "best move is:" << endl;
+	//printMove(bestMove);
+	//printBitBoard("move:"+to_string(piece->type), piece->canMoveToBB);
+	//printBitBoard("kill", piece->canKillOnBB);
+//#endif
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	cout << "Nodes reached: " << nrEvaluatedPositions << " Time elapsed: " << elapsed_secs << " seconds" << endl;
 	
 	if (success) {
 		gamePosition->makeMoveFromTo(bestMove.from, bestMove.to);
+		printFen(gamePosition->getBoard());
 		scene->CreateScene();
 
 		scene->MarkSquare(bestMove.from);
 		scene->MarkSquare(bestMove.to);
 		scene->UpdateScreen();
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		scene->CreateScene();
+		//scene->CreateScene();
 	}
 	else 
 	{

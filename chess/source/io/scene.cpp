@@ -7,8 +7,11 @@
 // -- Includes ---
 
 #include "source/io/scene.h"
-#include "windows.h"
 #include <stdio.h>
+
+#ifndef __linux__
+#include <windows.h>
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,7 +171,7 @@ bool Scene::DrawPieces()
 
 		for (const_iterator_t it = gamePosition->piecesBegin(white_black[i]); it != gamePosition->piecesEnd(white_black[i]); ++it) {
 			sq = it->second.ownSquare;
-			int piece = it->second.getType();
+			int piece = it->second.type;
 			file = x1 + SQUARE_SIZE * sq.file;
 			rank = y1 + SQUARE_SIZE * sq.rank;
 			PutPiece(file, rank, piece);

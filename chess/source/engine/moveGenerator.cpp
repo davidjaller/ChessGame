@@ -36,7 +36,7 @@ bool MoveGenerator::IsLegalMove(const Position* position, Square squareFrom, Squ
 
 		if (attackingPieces.size() > 1) {
 			bitBoard_t captureAttackerBB = 0;
-			if (abs(piece->getType()) == KING) {
+			if (abs(piece->type) == KING) {
 				movementBB = filterOutOfCheckKing(movementBB, position, turn, attackingPieces, captureAttackerBB);
 			}
 			else { // only king is allowed to move when 2 checkers
@@ -46,7 +46,7 @@ bool MoveGenerator::IsLegalMove(const Position* position, Square squareFrom, Squ
 		else if (inCheck)
 		{
 			bitBoard_t captureAttackerBB = squareToBitBoard(attackingPieces.front()->ownSquare);
-			if (abs(piece->getType()) == KING) {
+			if (abs(piece->type) == KING) {
 				movementBB = filterOutOfCheckKing(movementBB, position, turn, attackingPieces, captureAttackerBB);
 			}
 			else
@@ -54,7 +54,7 @@ bool MoveGenerator::IsLegalMove(const Position* position, Square squareFrom, Squ
 		}
 		else
 		{
-			if (abs(piece->getType()) == KING)
+			if (abs(piece->type) == KING)
 				movementBB = filterNormalKing(movementBB, position, turn);
 			else
 				movementBB = filterNormal(movementBB, position, turn, piece);
@@ -90,7 +90,7 @@ int MoveGenerator::generateMoves(const Position* position, list<Move>* moveList,
 				movementBB = king->canMoveToBB;
 
 			movementBB = filterOutOfCheckKing(movementBB, position, turn, attackingPieces, captureAttackerBB);
-			return bitBoardToMoves(movementBB, moveList, king->ownSquare, generateCaptures, king->getType());
+			return bitBoardToMoves(movementBB, moveList, king->ownSquare, generateCaptures, king->type);
 		}
 	}
 	else 
@@ -107,19 +107,19 @@ int MoveGenerator::generateMoves(const Position* position, list<Move>* moveList,
 			if (inCheck) 
 			{
 				bitBoard_t captureAttackerBB = squareToBitBoard(attackingPieces.front()->ownSquare);
-				if (abs(piece.getType()) == KING)
+				if (abs(piece.type) == KING)
 					movementBB = filterOutOfCheckKing(movementBB, position, turn, attackingPieces, captureAttackerBB);
 				else
 					movementBB = filterOutOfCheck(movementBB, position, turn, attackingPieces.front(), captureAttackerBB);
 			}
 			else 
 			{
-				if (abs(piece.getType()) == KING)
+				if (abs(piece.type) == KING)
 					movementBB = filterNormalKing(movementBB, position, turn);
 				else
 					movementBB = filterNormal(movementBB, position, turn, &piece);
 			}
-			count += bitBoardToMoves(movementBB, moveList, piece.ownSquare, generateCaptures, piece.getType());
+			count += bitBoardToMoves(movementBB, moveList, piece.ownSquare, generateCaptures, piece.type);
 		}
 		return count;
 	}
@@ -137,7 +137,6 @@ bitBoard_t MoveGenerator::filterOutOfCheckKing(bitBoard_t movementBB, const Posi
 	// We dont need to consider casteling, but we do need to make sure king does not walk into its own shadow
 	movementBB &= ~position->getAttackedSquaresBB(getOpposite(turn));
 	movementBB &= ~getKingShadowsBB(attackingPieces, turn, position->getKingPos(turn));
-	movementBB |= captureAttackerBB;
 	return movementBB;
 }
 

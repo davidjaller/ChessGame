@@ -1,5 +1,8 @@
 
 #include "source/board/Position.h"
+static std::map<char, int> charPieceMap = 
+{ {'P',WHITE_PAWN}, {'N', WHITE_KNIGHT},{'B', WHITE_BISHOP},{'R', WHITE_ROOK},{'Q', WHITE_QUEEN},{'K', WHITE_KING},
+  {'p', BLACK_PAWN},{'n', BLACK_KNIGHT},{'b', BLACK_BISHOP},{'r', BLACK_ROOK},{'q', BLACK_QUEEN},{'k', BLACK_KING} };
 
 Position::Position() : whiteAlivePieces(PlayerColor::WHITE), blackAlivePieces(PlayerColor::BLACK) 
 {
@@ -17,20 +20,7 @@ void Position::InitPosition(array<array<int, 8>, 8> initMatrix, PlayerColor turn
 		for (sq.file = 0; sq.file < 8; sq.file++)
 		{
 			int pieceType = initMatrix[sq.rank][sq.file];
-			board.SetPieceOnSquare(pieceType, sq);
-
-			if (pieceType > 0) {
-				whiteAlivePieces.add(pieceType, sq);
-				if (pieceType == WHITE_KING) {
-					board.SetKingPos(PlayerColor::WHITE, sq);
-				}
-			}
-			else if (pieceType < 0) {
-				blackAlivePieces.add(pieceType, sq);
-				if (pieceType == BLACK_KING) {
-					board.SetKingPos(PlayerColor::BLACK, sq);
-				}
-			}
+			setPiece(pieceType, sq);
 		}
 	}
 	board.setCastelingRight(WHITE_SHORT, true); // for now constant, could be argument
@@ -41,6 +31,74 @@ void Position::InitPosition(array<array<int, 8>, 8> initMatrix, PlayerColor turn
 	board.outedWhite.clear();
 	board.outedBlack.clear();
 	board.setTurn(turn);
+}
+
+void Position::InitPosition(const string &fenStr) {
+	board.outedWhite.clear();
+	board.outedBlack.clear();
+	blackAlivePieces.clearList();
+	whiteAlivePieces.clearList();
+	unsigned char token;
+	Square sq(0, 0);
+	string str;
+	std::stringstream ss(fenStr);
+
+	ss >> std::noskipws;
+
+	// 1. Piece placement
+	while ((ss >> token) && !isspace(token))
+	{
+		if (isdigit(token))
+			sq.file += (token - '0'); // Advance the given number of files
+
+		else if (token == '/') {
+			sq.rank += 1;
+			sq.file = 0;
+		}
+		else
+		{
+			std::map<char, int>::iterator it = charPieceMap.find(token);
+			if (it != charPieceMap.end()) {
+				int pieceType = it->second;
+				setPiece(pieceType, sq);
+				sq.file++;
+			}
+		}
+	}
+	//// 2. Active color
+	ss >> token;
+	board.setTurn(token == 'w' ? PlayerColor::WHITE : PlayerColor::BLACK);
+	ss >> token;
+
+	//// 3. Castling availability. 
+	while ((ss >> token) && !isspace(token))
+	{
+		if (token == 'K')
+			board.setCastelingRight(WHITE_SHORT, true);
+		else if(token == 'k')
+			board.setCastelingRight(BLACK_SHORT, true);
+		else if (token == 'Q')
+			board.setCastelingRight(WHITE_LONG, true);
+		else if (token == 'q')
+			board.setCastelingRight(BLACK_LONG, true);
+	}
+}
+
+void Position::setPiece(int pieceType, Square sq) {
+	board.SetPieceOnSquare(pieceType, sq);
+
+	if (pieceType > 0) {
+		whiteAlivePieces.add(pieceType, sq);
+		if (pieceType == WHITE_KING) {
+			board.SetKingPos(PlayerColor::WHITE, sq);
+		}
+	}
+	else if (pieceType < 0) {
+		blackAlivePieces.add(pieceType, sq);
+		if (pieceType == BLACK_KING) {
+			board.SetKingPos(PlayerColor::BLACK, sq);
+		}
+	}
 }
 
 const Board* Position::getBoard() const
